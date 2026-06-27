@@ -1,0 +1,1786 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SESバックオフィス運営サービス｜管理部門を増やさずに、SES事業を成長させる。</title>
+  <meta name="description" content="勤怠管理・請求書作成・給与計算用データ作成など、SES企業の月末業務をまるごと代行。社長や営業担当者が売上をつくる仕事に集中できる環境を提供します。">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&family=Cormorant+Garamond:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    /* ============================================
+       デザイントークン
+    ============================================ */
+    :root {
+      --color-bg:         #111111;
+      --color-surface:    #1A1A1A;
+      --color-surface2:   #222222;
+      --color-border:     #2A2A2A;
+      --color-text:       #FFFFFF;
+      --color-text-muted: #999999;
+      --color-gold:       #C9A84C;
+      --color-gold-light: #E8C96A;
+
+      --font-display: 'Cormorant Garamond', serif;
+      --font-body:    'Noto Sans JP', sans-serif;
+
+      --max-w: 960px;
+      --section-py: 96px;
+    }
+
+    /* ============================================
+       リセット・ベース
+    ============================================ */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background-color: var(--color-bg);
+      color: var(--color-text);
+      font-family: var(--font-body);
+      font-size: 16px;
+      line-height: 1.8;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    img { display: block; max-width: 100%; }
+
+    a { color: inherit; text-decoration: none; }
+
+    :focus-visible {
+      outline: 2px solid var(--color-gold-light);
+      outline-offset: 3px;
+    }
+    .skip-link {
+      position: absolute; left: 12px; top: -48px;
+      background: var(--color-gold); color: #111;
+      padding: 10px 18px; border-radius: 2px; z-index: 200;
+      font-size: 13px; font-weight: 700;
+      transition: top 0.2s;
+    }
+    .skip-link:focus { top: 12px; }
+
+    /* ============================================
+       ユーティリティ
+    ============================================ */
+    .container {
+      max-width: var(--max-w);
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+
+    .section {
+      padding: var(--section-py) 0;
+    }
+
+    .section-label {
+      display: inline-block;
+      font-family: var(--font-display);
+      font-size: 11px;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      color: var(--color-gold);
+      margin-bottom: 16px;
+    }
+
+    .section-title {
+      font-size: clamp(24px, 4vw, 38px);
+      font-weight: 700;
+      line-height: 1.4;
+      margin-bottom: 16px;
+    }
+
+    .section-title em {
+      font-style: normal;
+      color: var(--color-gold);
+    }
+
+    .section-desc {
+      color: var(--color-text-muted);
+      font-size: 15px;
+      max-width: 600px;
+      line-height: 1.9;
+    }
+
+    .gold { color: var(--color-gold); }
+
+    .section-title, .hero-title, .closing-title {
+      word-break: keep-all;
+      overflow-wrap: anywhere;
+    }
+
+    /* ============================================
+       ボタン
+    ============================================ */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 16px 36px;
+      font-family: var(--font-body);
+      font-size: 15px;
+      font-weight: 700;
+      border: none;
+      border-radius: 2px;
+      cursor: pointer;
+      transition: background 0.2s, color 0.2s, transform 0.15s;
+      text-decoration: none;
+    }
+
+    .btn-primary {
+      background: var(--color-gold);
+      color: #111111;
+    }
+    .btn-primary:hover {
+      background: var(--color-gold-light);
+      transform: translateY(-1px);
+    }
+
+    .btn-outline {
+      background: transparent;
+      color: var(--color-gold);
+      border: 1px solid var(--color-gold);
+    }
+    .btn-outline:hover {
+      background: rgba(201,168,76,0.08);
+      transform: translateY(-1px);
+    }
+
+    .btn-group {
+      display: flex;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    /* ============================================
+       区切り線
+    ============================================ */
+    .divider {
+      width: 40px;
+      height: 1px;
+      background: var(--color-gold);
+      margin: 24px 0;
+    }
+
+    /* ============================================
+       ヘッダー（固定ナビ）
+    ============================================ */
+    .header {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      background: rgba(17,17,17,0.92);
+      backdrop-filter: blur(8px);
+      border-bottom: 1px solid var(--color-border);
+      padding: 0 24px;
+      height: 64px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .header-logo {
+      font-family: var(--font-display);
+      font-size: 18px;
+      letter-spacing: 0.05em;
+      color: var(--color-gold);
+    }
+
+    .header-cta {
+      padding: 10px 24px;
+      font-size: 13px;
+    }
+
+    /* ============================================
+       ファーストビュー
+    ============================================ */
+    .hero {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      padding-top: 64px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background:
+        radial-gradient(ellipse 60% 50% at 80% 50%, rgba(201,168,76,0.06) 0%, transparent 70%),
+        radial-gradient(ellipse 40% 60% at 10% 80%, rgba(201,168,76,0.03) 0%, transparent 60%);
+      pointer-events: none;
+    }
+
+    /* 背景グリッド線 */
+    .hero::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image:
+        linear-gradient(var(--color-border) 1px, transparent 1px),
+        linear-gradient(90deg, var(--color-border) 1px, transparent 1px);
+      background-size: 60px 60px;
+      opacity: 0.3;
+      pointer-events: none;
+    }
+
+    .hero-inner {
+      position: relative;
+      z-index: 1;
+    }
+
+    .hero-eyebrow {
+      font-family: var(--font-display);
+      font-size: 12px;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: var(--color-gold);
+      margin-bottom: 28px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .hero-eyebrow::before {
+      content: '';
+      display: block;
+      width: 32px;
+      height: 1px;
+      background: var(--color-gold);
+    }
+
+    .hero-title {
+      font-size: clamp(30px, 5.5vw, 58px);
+      font-weight: 700;
+      line-height: 1.35;
+      margin-bottom: 28px;
+      letter-spacing: -0.01em;
+      text-wrap: balance;
+    }
+
+    .hero-title em {
+      font-style: normal;
+      color: var(--color-gold);
+      display: block;
+    }
+
+    .hero-sub {
+      font-size: clamp(14px, 2vw, 17px);
+      color: var(--color-text-muted);
+      line-height: 2;
+      margin-bottom: 48px;
+      max-width: 540px;
+      word-break: keep-all;
+      overflow-wrap: break-word;
+      text-wrap: pretty;
+    }
+
+    /* ============================================
+       共感セクション
+    ============================================ */
+    .pain {
+      background: var(--color-surface);
+      border-top: 1px solid var(--color-border);
+      border-bottom: 1px solid var(--color-border);
+    }
+
+    .pain-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 16px;
+      margin: 48px 0;
+    }
+
+    .pain-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 14px;
+      padding: 20px 24px;
+      background: var(--color-surface2);
+      border: 1px solid var(--color-border);
+      border-radius: 2px;
+    }
+
+    .pain-check {
+      width: 22px;
+      height: 22px;
+      border: 1px solid var(--color-gold);
+      border-radius: 2px;
+      flex-shrink: 0;
+      margin-top: 2px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .pain-check svg {
+      width: 13px;
+      height: 13px;
+      stroke: var(--color-gold);
+      stroke-width: 2.5;
+      fill: none;
+    }
+
+    .pain-text {
+      font-size: 14px;
+      line-height: 1.7;
+      color: var(--color-text);
+    }
+
+    .pain-message {
+      border-left: 2px solid var(--color-gold);
+      padding-left: 24px;
+      margin-top: 8px;
+    }
+
+    .pain-message p {
+      font-size: 16px;
+      line-height: 2;
+      color: var(--color-text-muted);
+    }
+
+    .pain-message strong {
+      color: var(--color-gold);
+    }
+
+    /* ============================================
+       解決策
+    ============================================ */
+    .solution-box {
+      background: var(--color-surface);
+      border: 1px solid var(--color-border);
+      border-top: 2px solid var(--color-gold);
+      padding: 48px;
+      border-radius: 2px;
+      margin-top: 48px;
+    }
+
+    .solution-box p {
+      font-size: 16px;
+      line-height: 2;
+      color: var(--color-text-muted);
+    }
+
+    /* ============================================
+       サービス内容（フロー）
+    ============================================ */
+    .service {
+      background: var(--color-surface);
+      border-top: 1px solid var(--color-border);
+      border-bottom: 1px solid var(--color-border);
+    }
+
+    .flow {
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+      margin-top: 48px;
+      position: relative;
+      max-width: 560px;
+    }
+
+    .flow-item {
+      display: flex;
+      align-items: stretch;
+      gap: 0;
+    }
+
+    .flow-left {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      width: 64px;
+      flex-shrink: 0;
+    }
+
+    .flow-num {
+      width: 44px;
+      height: 44px;
+      border: 1px solid var(--color-gold);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--font-display);
+      font-size: 16px;
+      color: var(--color-gold);
+      flex-shrink: 0;
+      background: var(--color-bg);
+      position: relative;
+      z-index: 1;
+    }
+
+    .flow-line {
+      width: 1px;
+      flex: 1;
+      background: var(--color-border);
+      margin: 4px 0;
+    }
+
+    .flow-item:last-child .flow-line {
+      display: none;
+    }
+
+    .flow-content {
+      flex: 1;
+      padding: 0 0 40px 24px;
+    }
+
+    .flow-content h3 {
+      font-size: 17px;
+      font-weight: 700;
+      padding-top: 10px;
+      margin-bottom: 4px;
+    }
+
+    .flow-content p {
+      font-size: 14px;
+      color: var(--color-text-muted);
+    }
+
+    /* ============================================
+       導入メリット
+    ============================================ */
+    .merits-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 24px;
+      margin-top: 48px;
+    }
+
+    .merit-card {
+      background: var(--color-surface);
+      border: 1px solid var(--color-border);
+      padding: 36px 28px;
+      border-radius: 2px;
+      transition: border-color 0.2s;
+    }
+
+    .merit-card:hover {
+      border-color: var(--color-gold);
+    }
+
+    .merit-icon {
+      width: 36px; height: 36px;
+      margin-bottom: 20px;
+    }
+    .merit-icon svg { width: 36px; height: 36px; }
+
+    .merit-card h3 {
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--color-gold);
+      margin-bottom: 12px;
+    }
+
+    .merit-card p {
+      font-size: 14px;
+      color: var(--color-text-muted);
+      line-height: 1.8;
+    }
+
+    /* ============================================
+       比較表
+    ============================================ */
+    .compare {
+      background: var(--color-surface);
+      border-top: 1px solid var(--color-border);
+      border-bottom: 1px solid var(--color-border);
+    }
+
+    .compare-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 48px;
+      font-size: 14px;
+    }
+
+    .compare-table th,
+    .compare-table td {
+      padding: 18px 24px;
+      text-align: left;
+      border: 1px solid var(--color-border);
+    }
+
+    .compare-table thead th {
+      background: var(--color-surface2);
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+    }
+
+    .compare-table thead th.highlight {
+      background: var(--color-gold);
+      color: #111111;
+      text-align: center;
+    }
+
+    .compare-table tbody tr:nth-child(even) td {
+      background: rgba(255,255,255,0.015);
+    }
+
+    .compare-table td.ours {
+      text-align: center;
+      color: var(--color-gold);
+      font-weight: 700;
+    }
+
+    .compare-table td.theirs {
+      color: var(--color-text-muted);
+    }
+
+    /* ============================================
+       プラン
+    ============================================ */
+    .plans-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 24px;
+      margin-top: 48px;
+      align-items: stretch;
+    }
+
+    .plan-card {
+      background: var(--color-surface);
+      border: 1px solid var(--color-border);
+      border-radius: 2px;
+      padding: 36px 32px;
+      position: relative;
+      transition: border-color 0.2s;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .plan-card:hover {
+      border-color: var(--color-gold);
+    }
+
+    .plan-card.featured {
+      border-color: var(--color-gold);
+      border-width: 2px;
+      box-shadow: 0 0 0 1px rgba(201,168,76,0.25), 0 24px 60px -30px rgba(201,168,76,0.5);
+    }
+    @media (min-width: 641px){
+      .plan-card.featured { transform: translateY(-12px); }
+    }
+
+    .plan-badge {
+      position: absolute;
+      top: -1px;
+      right: 24px;
+      background: var(--color-gold);
+      color: #111111;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      padding: 4px 14px;
+    }
+
+    .plan-name {
+      font-family: var(--font-display);
+      font-size: 22px;
+      color: var(--color-gold);
+      margin-bottom: 8px;
+      letter-spacing: 0.05em;
+    }
+
+    .plan-price {
+      font-size: 32px;
+      font-weight: 700;
+      margin-bottom: 4px;
+    }
+
+    .plan-price span {
+      font-size: 14px;
+      font-weight: 400;
+      color: var(--color-text-muted);
+    }
+
+    .plan-divider {
+      width: 100%;
+      height: 1px;
+      background: var(--color-border);
+      margin: 24px 0;
+    }
+
+    .plan-features {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .plan-features li {
+      font-size: 14px;
+      color: var(--color-text-muted);
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+    }
+
+    .plan-features li::before {
+      content: '—';
+      color: var(--color-gold);
+      flex-shrink: 0;
+    }
+
+    .plan-lead {
+      font-size: 13px; color: var(--color-gold-light); line-height: 1.7; margin-top: 6px;
+    }
+    .plan-note {
+      font-size: 12px;
+      color: var(--color-text-muted);
+      margin-top: 8px;
+    }
+
+    /* ============================================
+       導入の流れ
+    ============================================ */
+    .steps-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+      gap: 2px;
+      margin-top: 48px;
+    }
+
+    .step-item {
+      background: var(--color-surface);
+      padding: 28px 20px;
+      text-align: center;
+      border: 1px solid var(--color-border);
+      position: relative;
+    }
+
+    .step-num {
+      font-family: var(--font-display);
+      font-size: 36px;
+      color: var(--color-gold);
+      opacity: 0.3;
+      line-height: 1;
+      margin-bottom: 8px;
+    }
+
+    .step-title {
+      font-size: 14px;
+      font-weight: 700;
+      margin-bottom: 6px;
+    }
+
+    .step-desc {
+      font-size: 12px;
+      color: var(--color-text-muted);
+    }
+
+    /* ============================================
+       セキュリティ
+    ============================================ */
+    .security {
+      background: var(--color-surface);
+      border-top: 1px solid var(--color-border);
+      border-bottom: 1px solid var(--color-border);
+    }
+
+    .security-list {
+      list-style: none;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 16px;
+      margin-top: 48px;
+    }
+
+    .security-list li {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      padding: 20px 24px;
+      background: var(--color-surface2);
+      border: 1px solid var(--color-border);
+      font-size: 14px;
+    }
+
+    .security-list li::before {
+      content: '';
+      width: 18px; height: 20px; flex-shrink: 0;
+      background: no-repeat center/contain
+        url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23C9A84C' stroke-width='1.6'%3E%3Crect x='4' y='10' width='16' height='11' rx='2'/%3E%3Cpath d='M8 10V7a4 4 0 0 1 8 0v3'/%3E%3C/svg%3E");
+    }
+
+    /* ============================================
+       FAQ
+    ============================================ */
+    .faq-list {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+      margin-top: 48px;
+    }
+
+    .faq-item {
+      background: var(--color-surface);
+      border: 1px solid var(--color-border);
+      overflow: hidden;
+    }
+
+    .faq-q {
+      width: 100%;
+      background: none;
+      border: none;
+      color: var(--color-text);
+      font-family: var(--font-body);
+      font-size: 15px;
+      font-weight: 700;
+      text-align: left;
+      padding: 24px 28px;
+      cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+      transition: color 0.2s;
+    }
+
+    .faq-q:hover {
+      color: var(--color-gold);
+    }
+
+    .faq-q .q-label {
+      color: var(--color-gold);
+      font-family: var(--font-display);
+      font-size: 18px;
+      margin-right: 4px;
+      flex-shrink: 0;
+    }
+
+    .faq-q .q-text { flex: 1; }
+
+    .faq-arrow {
+      width: 20px;
+      height: 20px;
+      stroke: var(--color-gold);
+      stroke-width: 2;
+      fill: none;
+      flex-shrink: 0;
+      transition: transform 0.3s;
+    }
+
+    .faq-item.open .faq-arrow {
+      transform: rotate(180deg);
+    }
+
+    .faq-a {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.3s ease;
+    }
+
+    .faq-a-inner {
+      padding: 0 28px 24px;
+      font-size: 14px;
+      color: var(--color-text-muted);
+      line-height: 1.9;
+      border-top: 1px solid var(--color-border);
+      padding-top: 20px;
+    }
+
+    /* ============================================
+       クロージング
+    ============================================ */
+    .closing {
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .closing::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(ellipse 70% 60% at 50% 50%, rgba(201,168,76,0.07) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .closing-inner {
+      position: relative;
+      z-index: 1;
+      max-width: 680px;
+      margin: 0 auto;
+    }
+
+    .closing-title {
+      font-size: clamp(22px, 4vw, 40px);
+      font-weight: 700;
+      line-height: 1.5;
+      margin-bottom: 32px;
+      line-break: strict;
+      word-break: keep-all;
+    }
+    .closing-title em { font-style: normal; color: var(--color-gold); }
+    .closing-title .cl-line { white-space: nowrap; }
+    @media (max-width:640px){ .pc-br{display:none;} .closing-title .cl-line{ white-space: normal; } }
+
+    .closing-sub {
+      font-size: 15px;
+      color: var(--color-text-muted);
+      line-height: 2;
+      margin-bottom: 48px;
+      word-break: keep-all;
+      overflow-wrap: break-word;
+      text-wrap: pretty;
+    }
+
+    /* ============================================
+       お問い合わせフォーム
+    ============================================ */
+    .contact {
+      background: var(--color-surface);
+      border-top: 1px solid var(--color-border);
+      border-bottom: 1px solid var(--color-border);
+    }
+
+    .contact-grid {
+      max-width: 640px;
+      margin: 48px auto 0;
+    }
+
+    /* 右：フォーム */
+    .form-card {
+      background: var(--color-surface2);
+      border: 1px solid var(--color-border);
+      border-top: 2px solid var(--color-gold);
+      border-radius: 2px;
+      padding: 40px;
+    }
+    .form-summary {
+      display: none;
+      background: rgba(224,98,94,0.1);
+      border: 1px solid rgba(224,98,94,0.5);
+      color: #E0625E;
+      font-size: 13px; font-weight: 700;
+      padding: 12px 16px; border-radius: 2px; margin-bottom: 22px;
+    }
+    .form-summary.show { display: block; }
+    .form-field { margin-bottom: 22px; }
+    .form-field label {
+      display: block; font-size: 13px; font-weight: 700;
+      margin-bottom: 8px; color: var(--color-text);
+    }
+    .form-field label .req {
+      color: var(--color-gold); font-size: 11px; margin-left: 6px;
+      border: 1px solid var(--color-gold); border-radius: 2px; padding: 1px 6px;
+      font-weight: 700;
+    }
+    .form-field label .opt {
+      color: var(--color-text-muted); font-size: 11px; margin-left: 6px;
+    }
+    .form-control {
+      width: 100%;
+      background: var(--color-bg);
+      border: 1px solid var(--color-border);
+      border-radius: 2px;
+      color: var(--color-text);
+      font-family: var(--font-body);
+      font-size: 16px; /* 16px以上でiOSズーム暴発を防ぐ */
+      padding: 13px 16px;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+    .form-control::placeholder { color: #666; }
+    .form-control:focus {
+      outline: none;
+      border-color: var(--color-gold);
+      box-shadow: 0 0 0 3px rgba(201,168,76,0.15);
+    }
+    textarea.form-control { resize: vertical; min-height: 120px; line-height: 1.7; }
+
+    select.form-control {
+      appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='none' stroke='%23C9A84C' stroke-width='2'%3E%3Cpolyline points='4,7 10,13 16,7'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 14px center;
+      background-size: 16px;
+      padding-right: 42px;
+      cursor: pointer;
+    }
+
+    /* エラー状態 */
+    .form-control.invalid {
+      border-color: #E0625E;
+      box-shadow: 0 0 0 3px rgba(224,98,94,0.12);
+    }
+    .form-error {
+      display: none;
+      font-size: 12px; color: #E0625E; margin-top: 6px;
+    }
+    .form-field.has-error .form-error { display: block; }
+
+    .form-submit { width: 100%; margin-top: 8px; }
+    .form-submit:disabled { opacity: 0.7; cursor: not-allowed; transform: none; }
+    .spinner {
+      display: inline-block; width: 14px; height: 14px; margin-right: 8px;
+      border: 2px solid rgba(17,17,17,0.35); border-top-color: #111;
+      border-radius: 50%; animation: spin 0.7s linear infinite;
+      vertical-align: -2px;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    @media (prefers-reduced-motion: reduce){ .spinner{ animation-duration: 1.6s; } }
+
+    .form-note {
+      font-size: 12.5px; color: #B0B0B0;
+      margin-top: 16px; line-height: 1.7; text-align: center;
+    }
+    .form-note a { color: var(--color-gold); text-decoration: underline; }
+
+    /* 送信完了 */
+    .form-success {
+      display: none;
+      text-align: center;
+      padding: 24px 0;
+    }
+    .form-success.show { display: block; }
+    .form-success .check-circle {
+      width: 64px; height: 64px; margin: 0 auto 24px;
+      border: 2px solid var(--color-gold); border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .form-success .check-circle svg { width: 30px; height: 30px; stroke: var(--color-gold); stroke-width: 2.5; fill: none; }
+    .form-success h3 { font-size: 20px; margin-bottom: 12px; }
+    .form-success p { font-size: 14px; color: var(--color-text-muted); line-height: 1.9; }
+
+    /* デモ動作の注記 */
+    .form-demo-note {
+      margin-top: 18px; padding: 10px 14px;
+      background: rgba(201,168,76,0.06); border: 1px dashed rgba(201,168,76,0.4);
+      border-radius: 2px; font-size: 12.5px; color: var(--color-gold-light); line-height: 1.65;
+    }
+
+    @media (max-width: 860px) {
+      .contact-grid { grid-template-columns: 1fr; gap: 40px; }
+    }
+    @media (max-width: 640px) {
+      .form-card { padding: 28px 22px; }
+    }
+
+    /* ============================================
+       フッター
+    ============================================ */
+    .footer {
+      background: #0A0A0A;
+      border-top: 1px solid var(--color-border);
+      padding: 40px 24px;
+      text-align: center;
+    }
+
+    .footer p {
+      font-size: 12px;
+      color: var(--color-text-muted);
+    }
+
+    /* ============================================
+       スマホ追従CTA
+    ============================================ */
+    .mobile-cta {
+      display: none;
+      position: fixed;
+      left: 0; right: 0; bottom: 0;
+      z-index: 90;
+      transition: transform 0.3s ease, opacity 0.3s ease;
+      padding: 12px 16px calc(12px + env(safe-area-inset-bottom));
+      background: rgba(17,17,17,0.96);
+      backdrop-filter: blur(8px);
+      border-top: 1px solid var(--color-border);
+    }
+    .mobile-cta .btn { width: 100%; padding: 14px; }
+    .mobile-cta.is-hidden {
+      transform: translateY(130%);
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    /* ============================================
+       レスポンシブ
+    ============================================ */
+    @media (max-width: 640px) {
+      :root { --section-py: 64px; }
+
+      .mobile-cta { display: block; }
+      body { padding-bottom: 72px; }
+      .header-cta { display: none; }
+
+      .header-logo { font-size: 15px; }
+      .header-cta { padding: 8px 16px; font-size: 12px; }
+
+      .solution-box { padding: 32px 24px; }
+
+      .compare-table { font-size: 12px; }
+      .compare-table th,
+      .compare-table td { padding: 12px 14px; }
+
+      .steps-grid { grid-template-columns: repeat(2, 1fr); }
+
+      .btn-group { flex-direction: column; }
+      .btn { width: 100%; text-align: center; }
+    }
+
+    /* ============================================
+       スクロールアニメーション
+    ============================================ */
+    .js .fade-in {
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity 0.6s ease, transform 0.6s ease;
+    }
+    .js .fade-in.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .js .fade-in { opacity: 1 !important; transform: none !important; transition: none; }
+    }
+  </style>
+</head>
+<body>
+  <script>document.documentElement.className += ' js';</script>
+  <a href="#main" class="skip-link">本文へスキップ</a>
+
+  <!-- ============================================
+       ヘッダー
+  ============================================ -->
+  <header class="header">
+    <div class="header-logo">SESバックオフィス運営サービス</div>
+    <a href="#contact" class="btn btn-primary header-cta" data-intent="無料相談">無料相談はこちら</a>
+  </header>
+
+  <!-- ============================================
+       ファーストビュー
+  ============================================ -->
+  <main id="main"><section class="hero section">
+    <div class="container hero-inner">
+      <h1 class="hero-title">
+        管理部門を増やさずに、<br>
+        <em>SES事業を成長させる。</em>
+      </h1>
+      <p class="hero-sub">
+        勤怠管理・請求書作成・給与計算用データ作成など、SES企業の月末業務をまるごと代行。<br class="pc-br">
+        社長や営業担当者が「売上をつくる仕事」に集中できる環境を提供します。
+      </p>
+      <div class="btn-group">
+        <a href="#contact" class="btn btn-primary" data-intent="無料相談">無料相談はこちら</a>
+        <a href="#download" class="btn btn-outline">サービス資料ダウンロード</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================
+       共感セクション
+  ============================================ -->
+  <section class="pain section">
+    <div class="container">
+      <div class="fade-in">
+        <h2 class="section-title">このようなお悩みは<br>ありませんか？</h2>
+        <div class="divider"></div>
+      </div>
+
+      <div class="pain-grid fade-in">
+        <div class="pain-item">
+          <div class="pain-check">
+            <svg viewBox="0 0 13 10"><polyline points="1,5 4.5,9 12,1"/></svg>
+          </div>
+          <p class="pain-text">月末になると請求書作成に追われる</p>
+        </div>
+        <div class="pain-item">
+          <div class="pain-check">
+            <svg viewBox="0 0 13 10"><polyline points="1,5 4.5,9 12,1"/></svg>
+          </div>
+          <p class="pain-text">営業担当が事務作業を兼務している</p>
+        </div>
+        <div class="pain-item">
+          <div class="pain-check">
+            <svg viewBox="0 0 13 10"><polyline points="1,5 4.5,9 12,1"/></svg>
+          </div>
+          <p class="pain-text">社長自ら請求業務を行っている</p>
+        </div>
+        <div class="pain-item">
+          <div class="pain-check">
+            <svg viewBox="0 0 13 10"><polyline points="1,5 4.5,9 12,1"/></svg>
+          </div>
+          <p class="pain-text">事務担当が退職すると業務が止まる</p>
+        </div>
+        <div class="pain-item">
+          <div class="pain-check">
+            <svg viewBox="0 0 13 10"><polyline points="1,5 4.5,9 12,1"/></svg>
+          </div>
+          <p class="pain-text">エンジニアが増えるほど管理工数が増える</p>
+        </div>
+        <div class="pain-item">
+          <div class="pain-check">
+            <svg viewBox="0 0 13 10"><polyline points="1,5 4.5,9 12,1"/></svg>
+          </div>
+          <p class="pain-text">管理部門を増やす余裕がない</p>
+        </div>
+      </div>
+
+      <div class="pain-message fade-in">
+        <p>
+          SES企業の成長を止める原因は、営業力ではなく<br>
+          <strong>「バックオフィスの限界」</strong>であることが少なくありません。
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================
+       解決策
+  ============================================ -->
+  <section class="section">
+    <div class="container">
+      <div class="fade-in">
+        <h2 class="section-title">SESバックオフィス<br>運営サービスとは</h2>
+        <div class="divider"></div>
+      </div>
+
+      <div class="solution-box fade-in">
+        <p>
+          <span class="gold">SES企業専門</span>のバックオフィス運営サービスです。<br>
+          勤怠管理から請求・給与関連業務までを一括で支援し、<br>
+          管理部門を増やすことなく事業拡大をサポートします。
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================
+       サービス内容
+  ============================================ -->
+  <section class="service section">
+    <div class="container">
+      <div class="fade-in">
+        <h2 class="section-title">サービス内容</h2>
+        <div class="divider"></div>
+      </div>
+
+      <div class="flow fade-in">
+        <div class="flow-item">
+          <div class="flow-left">
+            <div class="flow-num">1</div>
+            <div class="flow-line"></div>
+          </div>
+          <div class="flow-content">
+            <h3>勤怠回収</h3>
+          </div>
+        </div>
+        <div class="flow-item">
+          <div class="flow-left">
+            <div class="flow-num">2</div>
+            <div class="flow-line"></div>
+          </div>
+          <div class="flow-content">
+            <h3>勤怠チェック</h3>
+          </div>
+        </div>
+        <div class="flow-item">
+          <div class="flow-left">
+            <div class="flow-num">3</div>
+            <div class="flow-line"></div>
+          </div>
+          <div class="flow-content">
+            <h3>稼働一覧作成</h3>
+          </div>
+        </div>
+        <div class="flow-item">
+          <div class="flow-left">
+            <div class="flow-num">4</div>
+            <div class="flow-line"></div>
+          </div>
+          <div class="flow-content">
+            <h3>請求書作成</h3>
+          </div>
+        </div>
+        <div class="flow-item">
+          <div class="flow-left">
+            <div class="flow-num">5</div>
+            <div class="flow-line"></div>
+          </div>
+          <div class="flow-content">
+            <h3>給与計算用データ作成</h3>
+          </div>
+        </div>
+        <div class="flow-item">
+          <div class="flow-left">
+            <div class="flow-num">6</div>
+            <div class="flow-line"></div>
+          </div>
+          <div class="flow-content">
+            <h3>月次管理資料作成</h3>
+          </div>
+        </div>
+        <div class="flow-item">
+          <div class="flow-left">
+            <div class="flow-num">7</div>
+            <div class="flow-line"></div>
+          </div>
+          <div class="flow-content">
+            <h3>納品</h3>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================
+       導入メリット
+  ============================================ -->
+  <section class="section">
+    <div class="container">
+      <div class="fade-in">
+        <h2 class="section-title">導入メリット</h2>
+        <div class="divider"></div>
+      </div>
+
+      <div class="merits-grid fade-in">
+        <div class="merit-card">
+          <div class="merit-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#C9A84C" stroke-width="1.5"><circle cx="12" cy="13" r="8"/><path d="M12 9v4l2.5 2.5M9 2h6"/></svg></div>
+          <h3>① 営業時間を取り戻せる</h3>
+          <p>月末業務を代行することで、営業活動・採用活動へ時間を使えます。</p>
+        </div>
+        <div class="merit-card">
+          <div class="merit-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#C9A84C" stroke-width="1.5"><path d="M3 3v18h18"/><path d="M7 9l4 4 3-3 5 5"/><path d="M19 15v-4h-4"/></svg></div>
+          <h3>② 管理部門を増やさなくてよい</h3>
+          <p>エンジニア数が増えても、バックオフィス人員を最小限に抑えられます。</p>
+        </div>
+        <div class="merit-card">
+          <div class="merit-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#C9A84C" stroke-width="1.5"><path d="M21 12a9 9 0 1 1-2.6-6.4"/><path d="M21 3v5h-5"/></svg></div>
+          <h3>③ 属人化を防げる</h3>
+          <p>標準化された運営フローで、担当者が変わっても安定した品質を維持します。</p>
+        </div>
+        <div class="merit-card">
+          <div class="merit-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#C9A84C" stroke-width="1.5"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1.3" fill="#C9A84C"/></svg></div>
+          <h3>④ SES業界に特化</h3>
+          <p>SES特有の管理フローを前提に運営します。</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================
+       他社との違い
+  ============================================ -->
+  <section class="compare section">
+    <div class="container">
+      <div class="fade-in">
+        <h2 class="section-title">他社との違い</h2>
+        <div class="divider"></div>
+      </div>
+
+      <div class="fade-in" style="overflow-x:auto;">
+        <table class="compare-table">
+          <thead>
+            <tr>
+              <th>比較項目</th>
+              <th class="theirs">一般的な事務代行</th>
+              <th class="highlight">SESバックオフィス運営サービス</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>対象業種</td>
+              <td class="theirs">幅広い業種向け</td>
+              <td class="ours">SES業界専門</td>
+            </tr>
+            <tr>
+              <td>対応業務</td>
+              <td class="theirs">一般事務中心</td>
+              <td class="ours">SES特有の月末業務に対応</td>
+            </tr>
+            <tr>
+              <td>サポート範囲</td>
+              <td class="theirs">業務単位で対応</td>
+              <td class="ours">バックオフィス全体を支援</td>
+            </tr>
+            <tr>
+              <td>業界知識</td>
+              <td class="theirs">業務知識が必要</td>
+              <td class="ours">SES運営を前提に設計</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================
+       プラン
+  ============================================ -->
+  <section class="section">
+    <div class="container">
+      <div class="fade-in">
+        <h2 class="section-title">プラン</h2>
+        <p class="section-desc">最低契約期間は3か月。月途中からの導入も可能です。</p>
+        <div class="divider"></div>
+      </div>
+
+      <div class="plans-grid fade-in">
+        <!-- Lite -->
+        <div class="plan-card">
+          <div class="plan-name">Lite</div>
+          <div class="plan-price">¥59,800<span> ／月</span></div>
+          <div class="plan-divider"></div>
+          <ul class="plan-features">
+            <li>勤怠管理</li>
+            <li>稼働一覧</li>
+            <li>勤怠催促</li>
+          </ul>
+        </div>
+
+        <!-- Core -->
+        <div class="plan-card featured">
+          <div class="plan-badge">おすすめ</div>
+          <div class="plan-name">Core</div>
+          <div class="plan-price">¥198,000<span> ／月</span></div>
+          <div class="plan-divider"></div>
+          <ul class="plan-features">
+            <li>Lite +</li>
+            <li>請求書作成</li>
+            <li>給与計算用データ</li>
+            <li>粗利一覧</li>
+            <li>協力会社支払一覧</li>
+            <li>月次管理資料</li>
+          </ul>
+        </div>
+
+        <!-- Office -->
+        <div class="plan-card">
+          <div class="plan-name">Office</div>
+          <div class="plan-price">¥348,000<span> ／月</span></div>
+          <div class="plan-divider"></div>
+          <ul class="plan-features">
+            <li>Core +</li>
+            <li>契約書作成支援</li>
+            <li>請求書送付代行</li>
+            <li>エンジニア台帳管理</li>
+            <li>証明書発行</li>
+            <li>月次経営レポート</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================
+       導入の流れ
+  ============================================ -->
+  <section class="section" style="background:var(--color-surface);border-top:1px solid var(--color-border);border-bottom:1px solid var(--color-border);">
+    <div class="container">
+      <div class="fade-in">
+        <h2 class="section-title">導入の流れ</h2>
+        <div class="divider"></div>
+      </div>
+
+      <div class="steps-grid fade-in">
+        <div class="step-item">
+          <div class="step-num">01</div>
+          <div class="step-title">お問い合わせ</div>
+        </div>
+        <div class="step-item">
+          <div class="step-num">02</div>
+          <div class="step-title">ヒアリング</div>
+        </div>
+        <div class="step-item">
+          <div class="step-num">03</div>
+          <div class="step-title">運用確認</div>
+        </div>
+        <div class="step-item">
+          <div class="step-num">04</div>
+          <div class="step-title">初期設定</div>
+        </div>
+        <div class="step-item">
+          <div class="step-num">05</div>
+          <div class="step-title">テスト運用</div>
+        </div>
+        <div class="step-item">
+          <div class="step-num">06</div>
+          <div class="step-title">本番開始</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================
+       セキュリティ
+  ============================================ -->
+  <section class="security section">
+    <div class="container">
+      <div class="fade-in">
+        <h2 class="section-title">セキュリティ</h2>
+        <p class="section-desc">お客様の大切な情報を適切に管理するため、以下の体制を整えています。</p>
+        <div class="divider"></div>
+      </div>
+
+      <ul class="security-list fade-in">
+        <li>秘密保持契約（NDA）の締結</li>
+        <li>業務担当者を限定した運営体制</li>
+        <li>アクセス権限の適切な管理</li>
+        <li>お客様データの適切な保管・廃棄</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- ============================================
+       FAQ
+  ============================================ -->
+  <section class="section">
+    <div class="container">
+      <div class="fade-in">
+        <h2 class="section-title">よくある質問</h2>
+        <div class="divider"></div>
+      </div>
+
+      <div class="faq-list fade-in">
+        <div class="faq-item">
+          <button class="faq-q" aria-expanded="false">
+            <span class="q-label">Q.</span>
+            <span class="q-text">何名規模から利用できますか？</span>
+            <svg class="faq-arrow" viewBox="0 0 20 20"><polyline points="4,7 10,13 16,7"/></svg>
+          </button>
+          <div class="faq-a">
+            <div class="faq-a-inner">10名程度から100名程度までを想定しています。</div>
+          </div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q" aria-expanded="false">
+            <span class="q-label">Q.</span>
+            <span class="q-text">現在Excel管理ですが利用できますか？</span>
+            <svg class="faq-arrow" viewBox="0 0 20 20"><polyline points="4,7 10,13 16,7"/></svg>
+          </button>
+          <div class="faq-a">
+            <div class="faq-a-inner">はい。現在の運用フローを確認したうえで導入できます。</div>
+          </div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q" aria-expanded="false">
+            <span class="q-label">Q.</span>
+            <span class="q-text">途中から利用できますか？</span>
+            <svg class="faq-arrow" viewBox="0 0 20 20"><polyline points="4,7 10,13 16,7"/></svg>
+          </button>
+          <div class="faq-a">
+            <div class="faq-a-inner">月途中でも導入可能です。</div>
+          </div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q" aria-expanded="false">
+            <span class="q-label">Q.</span>
+            <span class="q-text">自社の運用に合わせてもらえますか？</span>
+            <svg class="faq-arrow" viewBox="0 0 20 20"><polyline points="4,7 10,13 16,7"/></svg>
+          </button>
+          <div class="faq-a">
+            <div class="faq-a-inner">ヒアリングを行い、可能な範囲で運用に合わせます。</div>
+          </div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q" aria-expanded="false">
+            <span class="q-label">Q.</span>
+            <span class="q-text">契約期間はありますか？</span>
+            <svg class="faq-arrow" viewBox="0 0 20 20"><polyline points="4,7 10,13 16,7"/></svg>
+          </button>
+          <div class="faq-a">
+            <div class="faq-a-inner">最低契約期間は3か月です。</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================
+       クロージング
+  ============================================ -->
+  <section class="closing section">
+    <div class="container">
+      <div class="closing-inner fade-in">
+        <h2 class="closing-title">
+          <span class="cl-line">バックオフィスに追われる経営から、</span><br class="pc-br">
+          <em class="gold">事業成長に集中する経営へ。</em>
+        </h2>
+        <p class="closing-sub">
+          SESバックオフィス運営サービスは、SES企業専門の管理部門として、<br>
+          日々のバックオフィス業務を支援します。<br>
+          管理部門を増やすことなく、安心して事業拡大できる環境をご提供します。
+        </p>
+        <div class="btn-group" style="justify-content:center;">
+          <a href="#contact" class="btn btn-primary">お問い合わせはこちら</a>
+          <a href="#download" class="btn btn-outline">サービス資料ダウンロード</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================
+       お問い合わせフォーム ＋ Q&A
+  ============================================ -->
+  <section class="contact section" id="contact">
+    <div class="container">
+      <div class="fade-in">
+        <h2 class="section-title">無料相談・お問い合わせ</h2>
+        <div class="divider"></div>
+      </div>
+
+      <div class="contact-grid fade-in">
+
+        <!-- フォーム -->
+        <div class="form-card">
+          <div id="contactForm">
+            <p class="form-summary" id="formSummary" role="alert" aria-live="assertive"></p>
+
+            <div class="form-field">
+              <label for="f-company">会社名<span class="req">必須</span></label>
+              <input type="text" id="f-company" class="form-control" placeholder="株式会社サンプル" autocomplete="organization" aria-describedby="err-f-company">
+              <p class="form-error" id="err-f-company" role="alert" data-for="f-company">会社名をご入力ください。</p>
+            </div>
+
+            <div class="form-field">
+              <label for="f-name">お名前<span class="req">必須</span></label>
+              <input type="text" id="f-name" class="form-control" placeholder="山田 太郎" autocomplete="name" aria-describedby="err-f-name">
+              <p class="form-error" id="err-f-name" role="alert" data-for="f-name">お名前をご入力ください。</p>
+            </div>
+
+            <div class="form-field">
+              <label for="f-email">メールアドレス<span class="req">必須</span></label>
+              <input type="email" id="f-email" class="form-control" placeholder="example@company.co.jp" autocomplete="email" inputmode="email" aria-describedby="err-f-email">
+              <p class="form-error" id="err-f-email" role="alert" data-for="f-email">正しいメールアドレスをご入力ください。</p>
+            </div>
+
+            <div class="form-field">
+              <label for="f-type">お問い合わせ種別<span class="req">必須</span></label>
+              <select id="f-type" class="form-control" aria-describedby="err-f-type">
+                <option value="">選択してください</option>
+                <option value="無料相談">無料相談を申し込みたい</option>
+                <option value="資料請求">サービス資料がほしい</option>
+                <option value="見積もり">料金の見積もりがほしい</option>
+                <option value="その他">その他のお問い合わせ</option>
+              </select>
+              <p class="form-error" id="err-f-type" role="alert" data-for="f-type">お問い合わせ種別をお選びください。</p>
+            </div>
+
+            <div class="form-field">
+              <label for="f-message">お問い合わせ内容<span class="opt">任意</span></label>
+              <textarea id="f-message" class="form-control" placeholder="現在のエンジニア人数や、お困りごとなどをご記入いただけるとスムーズです。"></textarea>
+            </div>
+
+            <button type="button" class="btn btn-primary form-submit" id="submitBtn">送信する</button>
+
+            <p class="form-note">
+              送信により<a href="#">プライバシーポリシー</a>に同意したものとみなします。
+            </p>
+
+            <div class="form-demo-note">
+              ※ 現在このフォームはデモ動作です。送信先（メール／API）は未定のため、実際には送信されません。連携先確定後に有効化します。
+            </div>
+          </div>
+
+          <!-- 送信完了表示 -->
+          <div class="form-success" id="formSuccess" role="status" aria-live="polite">
+            <div class="check-circle">
+              <svg viewBox="0 0 24 24"><polyline points="4,12 10,18 20,6"/></svg>
+            </div>
+            <h3>送信が完了しました</h3>
+            <p>お問い合わせありがとうございます。<br>内容を確認のうえ、担当者よりご返信いたします。</p>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  </main>
+
+  <!-- スマホ追従CTA -->
+  <div class="mobile-cta">
+    <a href="#contact" class="btn btn-primary" data-intent="無料相談">無料相談はこちら</a>
+  </div>
+
+  <!-- ============================================
+       フッター
+  ============================================ -->
+  <footer class="footer">
+    <p>© 2026 SESバックオフィス運営サービス</p>
+  </footer>
+
+  <!-- ============================================
+       JavaScript
+  ============================================ -->
+  <script>
+    // FAQ アコーディオン
+    document.querySelectorAll('.faq-q').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const item = btn.closest('.faq-item');
+        const answer = item.querySelector('.faq-a');
+        const isOpen = item.classList.contains('open');
+
+        // 全部閉じる
+        document.querySelectorAll('.faq-item').forEach(el => {
+          el.classList.remove('open');
+          el.querySelector('.faq-a').style.maxHeight = '0';
+          el.querySelector('.faq-q').setAttribute('aria-expanded', 'false');
+        });
+
+        // クリックしたものを開く（既に開いていれば閉じたまま）
+        if (!isOpen) {
+          item.classList.add('open');
+          answer.style.maxHeight = answer.scrollHeight + 'px';
+          btn.setAttribute('aria-expanded', 'true');
+        }
+      });
+    });
+
+    // ============================================
+    // CTA意図をフォーム種別へ引き継ぐ（導線の連続性）
+    // ============================================
+    document.querySelectorAll('[data-intent]').forEach(a => {
+      a.addEventListener('click', () => {
+        const sel = document.getElementById('f-type');
+        if (sel) sel.value = a.getAttribute('data-intent');
+      });
+    });
+
+    // ============================================
+    // お問い合わせフォーム
+    // ============================================
+    (function () {
+      const form = document.getElementById('contactForm');
+      if (!form) return;
+      const submitBtn = document.getElementById('submitBtn');
+      const success = document.getElementById('formSuccess');
+
+      const fields = {
+        'f-company': { required: true, msg: '会社名をご入力ください。' },
+        'f-name':    { required: true, msg: 'お名前をご入力ください。' },
+        'f-email':   { required: true, email: true, msg: '正しいメールアドレスをご入力ください。' },
+        'f-type':    { required: true, msg: 'お問い合わせ種別をお選びください。' }
+      };
+
+      const emailRe = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+      function validateField(id) {
+        const el = document.getElementById(id);
+        const wrap = el.closest('.form-field');
+        const rule = fields[id];
+        const val = el.value.trim();
+        let ok = true;
+        if (rule.required && !val) ok = false;
+        if (ok && rule.email && !emailRe.test(val)) ok = false;
+
+        if (ok) {
+          wrap.classList.remove('has-error');
+          el.classList.remove('invalid');
+          el.removeAttribute('aria-invalid');
+        } else {
+          wrap.classList.add('has-error');
+          el.classList.add('invalid');
+          el.setAttribute('aria-invalid', 'true');
+        }
+        return ok;
+      }
+
+      // 一度エラーを出した項目は入力中に再検証して解除
+      Object.keys(fields).forEach(id => {
+        const el = document.getElementById(id);
+        const ev = el.tagName === 'SELECT' ? 'change' : 'input';
+        el.addEventListener(ev, () => {
+          if (el.closest('.form-field').classList.contains('has-error')) {
+            validateField(id);
+          }
+          // すべて解消したらサマリーを消す
+          const summary = document.getElementById('formSummary');
+          if (summary.classList.contains('show')) {
+            const stillBad = Object.keys(fields).some(fid =>
+              document.getElementById(fid).closest('.form-field').classList.contains('has-error'));
+            if (!stillBad) { summary.classList.remove('show'); summary.textContent = ''; }
+          }
+        });
+        el.addEventListener('blur', () => validateField(id));
+      });
+
+      submitBtn.addEventListener('click', () => {
+        let badCount = 0;
+        let firstBad = null;
+        Object.keys(fields).forEach(id => {
+          const ok = validateField(id);
+          if (!ok && !firstBad) firstBad = id;
+          if (!ok) badCount++;
+        });
+
+        const summary = document.getElementById('formSummary');
+        if (badCount > 0) {
+          summary.textContent = '入力内容に' + badCount + '件の不備があります。各項目をご確認ください。';
+          summary.classList.add('show');
+          if (firstBad) document.getElementById(firstBad).focus();
+          return;
+        }
+        summary.classList.remove('show');
+        summary.textContent = '';
+
+        // 送信中状態
+        submitBtn.disabled = true;
+        submitBtn.innerHTML = '<span class="spinner" aria-hidden="true"></span>送信中…';
+
+        // デモ：送信先未定のためフロントで完了画面に遷移
+        // （API連携先が決まり次第、ここを fetch(...) に差し替える。
+        //   失敗時は下記 catch 相当でボタンを復帰させ、summaryに再試行を促す）
+        setTimeout(() => {
+          form.style.display = 'none';
+          success.classList.add('show');
+          success.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }, 1000);
+      });
+    })();
+
+    // スクロールアニメーション
+    const faders = document.querySelectorAll('.fade-in');
+    if ('IntersectionObserver' in window) {
+      const observer = new IntersectionObserver((entries, obs) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('visible');
+            obs.unobserve(entry.target);
+          }
+        });
+      }, { threshold: 0.08, rootMargin: '0px 0px -40px 0px' });
+      faders.forEach(el => observer.observe(el));
+      // safety net: reveal anything still hidden after load
+      window.addEventListener('load', () => {
+        setTimeout(() => faders.forEach(el => el.classList.add('visible')), 1200);
+      });
+    } else {
+      faders.forEach(el => el.classList.add('visible'));
+    }
+
+    // フォーム表示中はスマホ追従CTAを隠す（重なり・二重CTA回避）
+    const contactSec = document.getElementById('contact');
+    const mobileCta = document.querySelector('.mobile-cta');
+    if (contactSec && mobileCta) {
+      let ticking = false;
+      const updateCta = () => {
+        const r = contactSec.getBoundingClientRect();
+        const vh = window.innerHeight || document.documentElement.clientHeight;
+        const overlapping = r.top < vh && r.bottom > 0;
+        mobileCta.classList.toggle('is-hidden', overlapping);
+        ticking = false;
+      };
+      const onScroll = () => {
+        if (!ticking) {
+          ticking = true;
+          requestAnimationFrame(updateCta);
+        }
+      };
+      window.addEventListener('scroll', onScroll, { passive: true });
+      window.addEventListener('resize', onScroll);
+      updateCta();
+    }
+  </script>
+
+</body>
+</html>
