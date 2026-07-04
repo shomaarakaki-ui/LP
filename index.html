@@ -232,6 +232,35 @@
     .hero-inner {
       position: relative;
       z-index: 1;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+      align-items: center;
+    }
+
+    .hero-media {
+      position: relative;
+    }
+
+    .hero-media img {
+      width: 100%;
+      height: auto;
+      display: block;
+      border: 1px solid var(--color-border);
+    }
+
+    .hero-text {
+      min-width: 0;
+    }
+
+    @media (max-width: 860px) {
+      .hero-inner {
+        grid-template-columns: 1fr;
+      }
+
+      .hero-media {
+        order: -1;
+      }
     }
 
     .hero-eyebrow {
@@ -287,6 +316,29 @@
       background: var(--color-surface);
       border-top: 1px solid var(--color-border);
       border-bottom: 1px solid var(--color-border);
+    }
+
+    .visually-hidden {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+      border: 0;
+    }
+
+    .pain-image {
+      margin: 8px 0 48px;
+    }
+
+    .pain-image img {
+      display: block;
+      width: 100%;
+      height: auto;
+      border-radius: 4px;
     }
 
     .pain-grid {
@@ -441,6 +493,8 @@
     .flow-content p {
       font-size: 14px;
       color: var(--color-text-muted);
+      line-height: 1.8;
+      margin-top: 4px;
     }
 
     /* ============================================
@@ -588,6 +642,14 @@
       margin-bottom: 8px;
       letter-spacing: 0.05em;
     }
+    /* プランごとの名前カラー */
+    .plan-name-lite   { color: #B8C4CC; }
+    .plan-name-core   { color: #C9A84C; }
+    .plan-name-office { color: #D98E4A; }
+    /* 下位プラン全機能の注記カラー（含まれるプランの色と対応） */
+    .plan-incl { font-weight: 700; }
+    .plan-features li.plan-incl-lite { color: #B8C4CC; }
+    .plan-features li.plan-incl-core { color: #C9A84C; }
 
     .plan-price {
       font-size: 32px;
@@ -599,7 +661,9 @@
       font-size: 14px;
       font-weight: 400;
       color: var(--color-text-muted);
+      white-space: nowrap;
     }
+    .plan-price { white-space: nowrap; }
 
     .plan-divider {
       width: 100%;
@@ -628,6 +692,7 @@
       color: var(--color-gold);
       flex-shrink: 0;
     }
+    .plan-features li.plan-incl::before { color: inherit; }
 
     .plan-lead {
       font-size: 13px; color: var(--color-gold-light); line-height: 1.7; margin-top: 6px;
@@ -654,6 +719,23 @@
       text-align: center;
       border: 1px solid var(--color-border);
       position: relative;
+    }
+
+    .step-arrow {
+      position: absolute;
+      top: 50%;
+      right: -13px;
+      transform: translateY(-50%);
+      z-index: 2;
+      color: var(--color-gold);
+      background: var(--color-bg);
+      border-radius: 50%;
+    }
+
+    @media (max-width: 860px) {
+      .step-arrow {
+        display: none;
+      }
     }
 
     .step-num {
@@ -1061,17 +1143,22 @@
   ============================================ -->
   <main id="main"><section class="hero section">
     <div class="container hero-inner">
-      <h1 class="hero-title">
-        管理部門を増やさずに、<br>
-        <em>SES事業を成長させる。</em>
-      </h1>
-      <p class="hero-sub">
-        勤怠管理・請求書作成・給与計算用データ作成など、SES企業の月末業務をまるごと代行。<br class="pc-br">
-        社長や営業担当者が「売上をつくる仕事」に集中できる環境を提供します。
-      </p>
-      <div class="btn-group">
-        <a href="#contact" class="btn btn-primary" data-intent="無料相談">無料相談はこちら</a>
-        <a href="#download" class="btn btn-outline">サービス資料ダウンロード</a>
+      <div class="hero-text">
+        <h1 class="hero-title">
+          管理部門を増やさずに、<br>
+          <em>SES事業を成長させる。</em>
+        </h1>
+        <p class="hero-sub">
+          勤怠管理・請求書作成・給与計算用データ作成など、SES企業の月末業務をまるごと代行。<br class="pc-br">
+          社長や営業担当者が「売上をつくる仕事」に集中できる環境を提供します。
+        </p>
+        <div class="btn-group">
+          <a href="#contact" class="btn btn-primary" data-intent="無料相談">無料相談はこちら</a>
+          <a href="#download" class="btn btn-outline">サービス資料ダウンロード</a>
+        </div>
+      </div>
+      <div class="hero-media">
+        <img src="images/hero-engineer.jpg" alt="エンジニアの作業風景">
       </div>
     </div>
   </section>
@@ -1081,55 +1168,14 @@
   ============================================ -->
   <section class="pain section">
     <div class="container">
-      <div class="fade-in">
-        <h2 class="section-title">このようなお悩みは<br>ありませんか？</h2>
-        <div class="divider"></div>
+      <h2 class="visually-hidden">このようなお悩みはありませんか？</h2>
+
+      <div class="pain-image fade-in">
+        <img src="images/assignment.png" alt="このようなお悩みはありませんか？ 月末になると請求書作成に追われる／営業担当が事務作業を兼務している／社長自ら請求業務を行っている／事務担当が退職すると業務が止まる／エンジニアが増えるほど管理工数が増える／管理部門を増やす余裕がない">
       </div>
 
-      <div class="pain-grid fade-in">
-        <div class="pain-item">
-          <div class="pain-check">
-            <svg viewBox="0 0 13 10"><polyline points="1,5 4.5,9 12,1"/></svg>
-          </div>
-          <p class="pain-text">月末になると請求書作成に追われる</p>
-        </div>
-        <div class="pain-item">
-          <div class="pain-check">
-            <svg viewBox="0 0 13 10"><polyline points="1,5 4.5,9 12,1"/></svg>
-          </div>
-          <p class="pain-text">営業担当が事務作業を兼務している</p>
-        </div>
-        <div class="pain-item">
-          <div class="pain-check">
-            <svg viewBox="0 0 13 10"><polyline points="1,5 4.5,9 12,1"/></svg>
-          </div>
-          <p class="pain-text">社長自ら請求業務を行っている</p>
-        </div>
-        <div class="pain-item">
-          <div class="pain-check">
-            <svg viewBox="0 0 13 10"><polyline points="1,5 4.5,9 12,1"/></svg>
-          </div>
-          <p class="pain-text">事務担当が退職すると業務が止まる</p>
-        </div>
-        <div class="pain-item">
-          <div class="pain-check">
-            <svg viewBox="0 0 13 10"><polyline points="1,5 4.5,9 12,1"/></svg>
-          </div>
-          <p class="pain-text">エンジニアが増えるほど管理工数が増える</p>
-        </div>
-        <div class="pain-item">
-          <div class="pain-check">
-            <svg viewBox="0 0 13 10"><polyline points="1,5 4.5,9 12,1"/></svg>
-          </div>
-          <p class="pain-text">管理部門を増やす余裕がない</p>
-        </div>
-      </div>
-
-      <div class="pain-message fade-in">
-        <p>
-          SES企業の成長を止める原因は、営業力ではなく<br>
-          <strong>「バックオフィスの限界」</strong>であることが少なくありません。
-        </p>
+      <div class="pain-image fade-in">
+        <img src="images/Opportunity_loss.png" alt="SES企業 成長の限界：バックオフィスの罠。SES企業の成長を止める原因は、営業力ではなく『バックオフィスの限界』であることが少なくありません。本来の成長曲線に対し、事務作業による時間の損失で案件獲得数が350から100へ大幅に停滞する。">
       </div>
     </div>
   </section>
@@ -1172,6 +1218,7 @@
           </div>
           <div class="flow-content">
             <h3>勤怠回収</h3>
+            <p>客先常駐しているエンジニア全員から、月末の勤務実績データを漏れなくスピーディーに集めます。</p>
           </div>
         </div>
         <div class="flow-item">
@@ -1181,6 +1228,7 @@
           </div>
           <div class="flow-content">
             <h3>勤怠チェック</h3>
+            <p>回収したデータに記入漏れや計算ミス、契約上の違反（過剰労働など）がないか精査します。</p>
           </div>
         </div>
         <div class="flow-item">
@@ -1190,6 +1238,7 @@
           </div>
           <div class="flow-content">
             <h3>稼働一覧作成</h3>
+            <p>全エンジニアの正確な稼働時間を一本化し、請求や給与計算のベースとなる一覧表にまとめます。</p>
           </div>
         </div>
         <div class="flow-item">
@@ -1199,6 +1248,7 @@
           </div>
           <div class="flow-content">
             <h3>請求書作成</h3>
+            <p>SES特有の精算幅（上限・下限時間）や単価に基づき、クライアント向けの請求書を正確に発行します。</p>
           </div>
         </div>
         <div class="flow-item">
@@ -1208,6 +1258,7 @@
           </div>
           <div class="flow-content">
             <h3>給与計算用データ作成</h3>
+            <p>基本給や残業代・控除額など、そのまま給与計算ソフトや社労士に渡せる形式のデータを用意します。</p>
           </div>
         </div>
         <div class="flow-item">
@@ -1217,6 +1268,7 @@
           </div>
           <div class="flow-content">
             <h3>月次管理資料作成</h3>
+            <p>当月の売上や粗利、エンジニアごとの稼働状況など、経営判断に必要な数字をレポート化します。</p>
           </div>
         </div>
         <div class="flow-item">
@@ -1226,6 +1278,7 @@
           </div>
           <div class="flow-content">
             <h3>納品</h3>
+            <p>作成したすべての書類やデータを、不備のない完璧な状態で期日までにクライアントへ引き渡します。</p>
           </div>
         </div>
       </div>
@@ -1327,8 +1380,8 @@
       <div class="plans-grid fade-in">
         <!-- Lite -->
         <div class="plan-card">
-          <div class="plan-name">Lite</div>
-          <div class="plan-price">¥59,800<span> ／月</span></div>
+          <div class="plan-name plan-name-lite">Lite</div>
+          <div class="plan-price">¥59,800<span> ／月（税込）</span></div>
           <div class="plan-divider"></div>
           <ul class="plan-features">
             <li>勤怠管理</li>
@@ -1340,11 +1393,11 @@
         <!-- Core -->
         <div class="plan-card featured">
           <div class="plan-badge">おすすめ</div>
-          <div class="plan-name">Core</div>
-          <div class="plan-price">¥198,000<span> ／月</span></div>
+          <div class="plan-name plan-name-core">Core</div>
+          <div class="plan-price">¥198,000<span> ／月（税込）</span></div>
           <div class="plan-divider"></div>
           <ul class="plan-features">
-            <li>Lite +</li>
+            <li class="plan-incl plan-incl-lite">Liteプランの全機能</li>
             <li>請求書作成</li>
             <li>給与計算用データ</li>
             <li>粗利一覧</li>
@@ -1355,11 +1408,11 @@
 
         <!-- Office -->
         <div class="plan-card">
-          <div class="plan-name">Office</div>
-          <div class="plan-price">¥348,000<span> ／月</span></div>
+          <div class="plan-name plan-name-office">Office</div>
+          <div class="plan-price">¥348,000<span> ／月（税込）</span></div>
           <div class="plan-divider"></div>
           <ul class="plan-features">
-            <li>Core +</li>
+            <li class="plan-incl plan-incl-core">Coreプランの全機能（Liteプラン含む）</li>
             <li>契約書作成支援</li>
             <li>請求書送付代行</li>
             <li>エンジニア台帳管理</li>
@@ -1385,26 +1438,37 @@
         <div class="step-item">
           <div class="step-num">01</div>
           <div class="step-title">お問い合わせ</div>
+          <div class="step-desc">まずはWebサイトのフォームからお気軽にご連絡いただき、初回ミーティング（オンライン商談など）の日程を調整します。</div>
+          <svg class="step-arrow" width="26" height="26" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
         </div>
         <div class="step-item">
           <div class="step-num">02</div>
           <div class="step-title">ヒアリング</div>
+          <div class="step-desc">貴社の現在のエンジニア数、月末の稼働状況、管理部門が抱えている具体的な課題やご要望を詳しくお伺いします。</div>
+          <svg class="step-arrow" width="26" height="26" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
         </div>
         <div class="step-item">
           <div class="step-num">03</div>
           <div class="step-title">運用確認</div>
+          <div class="step-desc">現在使用している勤怠管理ツール、Excelのフォーマット、請求書の発行手順などの実務フローを共有いただき、代行可能な範囲を精査します。</div>
+          <svg class="step-arrow" width="26" height="26" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
         </div>
         <div class="step-item">
           <div class="step-num">04</div>
           <div class="step-title">初期設定</div>
+          <div class="step-desc">貴社専用の業務マニュアルを作成し、弊社側のSES特化型オペレーションチームとセキュアなデータ連携体制を構築します。</div>
+          <svg class="step-arrow" width="26" height="26" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
         </div>
         <div class="step-item">
           <div class="step-num">05</div>
           <div class="step-title">テスト運用</div>
+          <div class="step-desc">本番開始前に、1〜2ヶ月間のテスト期間を設け、実際の勤怠データをもとに計算のズレや手順にミスが出ないかを徹底的に検証します。</div>
+          <svg class="step-arrow" width="26" height="26" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
         </div>
         <div class="step-item">
           <div class="step-num">06</div>
           <div class="step-title">本番開始</div>
+          <div class="step-desc">テストでの課題をクリアした上で本格的な運用へと移行し、毎月の面倒な月末バックオフィス業務を完全に自動化・効率化します。</div>
         </div>
       </div>
     </div>
