@@ -362,12 +362,6 @@
     /* ============================================
        サービス内容（フロー）
     ============================================ */
-    .service {
-      background: var(--color-surface);
-      border-top: 1px solid var(--color-border);
-      border-bottom: 1px solid var(--color-border);
-    }
-
     .flow {
       display: flex;
       flex-direction: column;
@@ -441,14 +435,14 @@
     /* ============================================
        導入メリット
     ============================================ */
-    .merits-grid {
+    .service-merits {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      grid-template-columns: repeat(2, 1fr);
       gap: 24px;
       margin-top: 48px;
     }
 
-    .merit-card {
+    .merit {
       background: var(--color-surface);
       border: 1px solid var(--color-border);
       padding: 36px 28px;
@@ -456,27 +450,43 @@
       transition: border-color 0.2s;
     }
 
-    .merit-card:hover {
+    .merit:hover {
       border-color: var(--color-gold);
     }
 
-    .merit-icon {
-      width: 36px; height: 36px;
-      margin-bottom: 20px;
-    }
-    .merit-icon svg { width: 36px; height: 36px; }
-
-    .merit-card h3 {
-      font-size: 16px;
+    .merit h3 {
+      font-size: 17px;
       font-weight: 700;
       color: var(--color-gold);
-      margin-bottom: 12px;
+      margin-bottom: 16px;
     }
 
-    .merit-card p {
+    .merit-quotes {
+      margin-bottom: 16px;
+    }
+
+    .merit-quotes p {
       font-size: 14px;
       color: var(--color-text-muted);
-      line-height: 1.8;
+      line-height: 1.9;
+    }
+
+    .merit-solution {
+      font-size: 14px;
+      color: var(--color-text);
+      line-height: 1.9;
+    }
+
+    .service-flow-title {
+      font-size: clamp(18px, 3vw, 22px);
+      font-weight: 700;
+      margin-top: 64px;
+    }
+
+    @media (max-width: 860px) {
+      .service-merits {
+        grid-template-columns: 1fr;
+      }
     }
 
     /* ============================================
@@ -1122,12 +1132,12 @@
   </section>
 
   <!-- ============================================
-       解決策
+       サービス内容（導入文＋メリット＋フロー統合）
   ============================================ -->
   <section class="section">
     <div class="container">
       <div class="fade-in">
-        <h2 class="section-title">SESバックオフィス<br>運営サービスとは</h2>
+        <h2 class="section-title">SESバックオフィス運営のサービス内容</h2>
         <div class="divider"></div>
       </div>
 
@@ -1138,18 +1148,39 @@
           管理部門を増やすことなく事業拡大をサポートします。
         </p>
       </div>
-    </div>
-  </section>
 
-  <!-- ============================================
-       サービス内容
-  ============================================ -->
-  <section class="service section">
-    <div class="container">
-      <div class="fade-in">
-        <h2 class="section-title">サービス内容</h2>
-        <div class="divider"></div>
+      <div class="service-merits fade-in">
+        <div class="merit">
+          <h3>メリット1：営業時間を取り戻せる</h3>
+          <div class="merit-quotes">
+            <p>『月末になると請求書作成に追われる』</p>
+            <p>『営業担当が事務作業を兼務している』</p>
+            <p>『社長自ら請求業務を行っている』</p>
+          </div>
+          <p class="merit-solution">——こうしたお悩みを月末業務の代行で解消し、営業活動・採用活動へ時間を使えます。</p>
+        </div>
+        <div class="merit">
+          <h3>メリット2：管理部門を増やさなくてよい</h3>
+          <div class="merit-quotes">
+            <p>『エンジニアが増えるほど管理工数が増える』</p>
+            <p>『管理部門を増やす余裕がない』</p>
+          </div>
+          <p class="merit-solution">——こうしたお悩みに対し、エンジニア数が増えてもバックオフィス人員を最小限に抑えられます。</p>
+        </div>
+        <div class="merit">
+          <h3>メリット3：属人化を防げる</h3>
+          <div class="merit-quotes">
+            <p>『事務担当が退職すると業務が止まる』</p>
+          </div>
+          <p class="merit-solution">——こうしたお悩みを、標準化された運営フローで解消し、担当者が変わっても安定した品質を維持します。</p>
+        </div>
+        <div class="merit">
+          <h3>メリット4：SES業界に特化</h3>
+          <p class="merit-solution">SES特有の管理フローを前提に運営します。</p>
+        </div>
       </div>
+
+      <h3 class="section-title service-flow-title fade-in">サービスの流れ</h3>
 
       <div class="flow fade-in">
         <div class="flow-item">
@@ -1221,41 +1252,6 @@
             <h3>納品</h3>
             <p>作成したすべての書類やデータを、不備のない完璧な状態で期日までにクライアントへ引き渡します。</p>
           </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- ============================================
-       導入メリット
-  ============================================ -->
-  <section class="section">
-    <div class="container">
-      <div class="fade-in">
-        <h2 class="section-title">導入メリット</h2>
-        <div class="divider"></div>
-      </div>
-
-      <div class="merits-grid fade-in">
-        <div class="merit-card">
-          <div class="merit-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#C9A84C" stroke-width="1.5"><circle cx="12" cy="13" r="8"/><path d="M12 9v4l2.5 2.5M9 2h6"/></svg></div>
-          <h3>① 営業時間を取り戻せる</h3>
-          <p>月末業務を代行することで、営業活動・採用活動へ時間を使えます。</p>
-        </div>
-        <div class="merit-card">
-          <div class="merit-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#C9A84C" stroke-width="1.5"><path d="M3 3v18h18"/><path d="M7 9l4 4 3-3 5 5"/><path d="M19 15v-4h-4"/></svg></div>
-          <h3>② 管理部門を増やさなくてよい</h3>
-          <p>エンジニア数が増えても、バックオフィス人員を最小限に抑えられます。</p>
-        </div>
-        <div class="merit-card">
-          <div class="merit-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#C9A84C" stroke-width="1.5"><path d="M21 12a9 9 0 1 1-2.6-6.4"/><path d="M21 3v5h-5"/></svg></div>
-          <h3>③ 属人化を防げる</h3>
-          <p>標準化された運営フローで、担当者が変わっても安定した品質を維持します。</p>
-        </div>
-        <div class="merit-card">
-          <div class="merit-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#C9A84C" stroke-width="1.5"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1.3" fill="#C9A84C"/></svg></div>
-          <h3>④ SES業界に特化</h3>
-          <p>SES特有の管理フローを前提に運営します。</p>
         </div>
       </div>
     </div>
