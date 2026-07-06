@@ -5,6 +5,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>SESバックオフィス運営サービス｜管理部門を増やさずに、SES事業を成長させる。</title>
   <meta name="description" content="勤怠管理・請求書作成・給与計算用データ作成など、SES企業の月末業務をまるごと代行。社長や営業担当者が売上をつくる仕事に集中できる環境を提供します。">
+  <link rel="icon" type="image/png" href="images/ses_icon_favicon.png">
+  <link rel="apple-touch-icon" href="images/ses_icon_favicon.png">
+  <meta property="og:image" content="images/ses_icon.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&family=Cormorant+Garamond:wght@400;600&display=swap" rel="stylesheet">
@@ -13,14 +16,14 @@
        デザイントークン
     ============================================ */
     :root {
-      --color-bg:         #111111;
-      --color-surface:    #1A1A1A;
-      --color-surface2:   #222222;
-      --color-border:     #2A2A2A;
-      --color-text:       #FFFFFF;
-      --color-text-muted: #999999;
-      --color-gold:       #C9A84C;
-      --color-gold-light: #E8C96A;
+      --color-bg:         #FFFFFF;
+      --color-surface:    #F8F6F1;
+      --color-surface2:   #F0EDE5;
+      --color-border:     #E4E0D6;
+      --color-text:       #1A1A1A;
+      --color-text-muted: #6B6B6B;
+      --color-gold:       #A9822B;
+      --color-gold-light: #C9A84C;
 
       --font-display: 'Cormorant Garamond', serif;
       --font-body:    'Noto Sans JP', sans-serif;
@@ -172,7 +175,7 @@
       position: fixed;
       top: 0; left: 0; right: 0;
       z-index: 100;
-      background: rgba(17,17,17,0.92);
+      background: rgba(255,255,255,0.92);
       backdrop-filter: blur(8px);
       border-bottom: 1px solid var(--color-border);
       padding: 0 24px;
@@ -316,6 +319,7 @@
       background: var(--color-surface);
       border-top: 1px solid var(--color-border);
       border-bottom: 1px solid var(--color-border);
+      position: relative;
     }
 
     .visually-hidden {
@@ -331,7 +335,8 @@
     }
 
     .pain-image {
-      margin: 8px 0 48px;
+      max-width: 960px;
+      margin: 8px auto 48px;
     }
 
     .pain-image img {
@@ -339,6 +344,82 @@
       width: 100%;
       height: auto;
       border-radius: 4px;
+    }
+
+    .pain-head { text-align: center; }
+    .pain-head .divider { margin-left: auto; margin-right: auto; }
+
+    .pain-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 24px;
+      margin: 48px 0 56px;
+    }
+
+    .pain-card {
+      background: #FFFFFF;
+      border: 1px solid var(--color-border);
+      border-radius: 16px;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.05);
+      padding: 28px 20px 24px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    .pain-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 16px 32px rgba(0,0,0,0.08);
+    }
+
+    .pain-card img {
+      display: block;
+      width: 82%;
+      max-width: 180px;
+      height: auto;
+      margin: 0 auto 20px;
+    }
+
+    .pain-card h3 {
+      font-size: 15px;
+      font-weight: 700;
+      line-height: 1.7;
+      color: var(--color-text);
+    }
+
+    /* 悩み→次セクションへのシェブロン装飾 */
+    .pain-chevron {
+      position: absolute;
+      left: 50%;
+      bottom: 0;
+      transform: translate(-50%, 50%);
+      margin: 0;
+      z-index: 2;
+      line-height: 0;
+    }
+    .pain-chevron svg {
+      width: 56px;
+      height: auto;
+      stroke: var(--color-gold);
+      stroke-width: 2.5;
+      fill: none;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    /* 横1×縦6（〜479px） / 横2×縦3（480〜767px） /
+       横3×縦2（768〜1199px） / 横6×縦1（1200px〜） */
+    @media (min-width: 480px) {
+      .pain-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+    @media (min-width: 768px) {
+      .pain-grid { grid-template-columns: repeat(3, 1fr); }
+    }
+    @media (min-width: 1200px) {
+      .pain-grid { grid-template-columns: repeat(6, 1fr); }
+      .pain .container { max-width: 1280px; }
     }
 
     /* ============================================
@@ -357,6 +438,12 @@
       font-size: 16px;
       line-height: 2;
       color: var(--color-text-muted);
+    }
+
+    .solution-lead {
+      font-size: 21px;
+      font-weight: 700;
+      color: var(--color-gold);
     }
 
     /* ============================================
@@ -490,6 +577,206 @@
     }
 
     /* ============================================
+       サービス内容 ゴールド帯見出し
+    ============================================ */
+    .service-section { padding-top: 0; }
+
+    .service-band {
+      background: var(--color-gold);
+      padding: 46px 0;
+      position: relative;
+      text-align: center;
+      margin-bottom: 8px;
+    }
+    .service-band-title {
+      color: #FFFFFF;
+      margin-bottom: 0;
+    }
+    .service-chevron {
+      position: absolute;
+      top: 0; left: 50%;
+      transform: translate(-50%, -52%);
+      width: 54px; height: auto;
+      line-height: 0;
+    }
+    .service-chevron svg {
+      width: 100%; height: auto;
+      stroke: var(--color-gold);
+      stroke-width: 4;
+      fill: none;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    /* メリット概要カード（お悩みカードと同スタイル・.pain-card を流用） */
+    .merit-cards {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 24px;
+      margin-top: 48px;
+    }
+    @media (max-width: 860px) { .merit-cards { grid-template-columns: repeat(2, 1fr); } }
+    @media (max-width: 520px) { .merit-cards { grid-template-columns: 1fr; } }
+
+    /* メリット詳細（左右交互レイアウト） */
+    .merit-features {
+      display: flex;
+      flex-direction: column;
+      gap: 56px;
+      margin-top: 72px;
+    }
+    .merit-feature {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 44px;
+      align-items: center;
+    }
+    .merit-feature:nth-child(even) .mf-media { order: 2; }
+    .merit-feature:nth-child(even) .mf-body  { order: 1; }
+
+    .mf-media img {
+      width: 100%;
+      height: auto;
+      border-radius: 12px;
+    }
+    .mf-badge {
+      display: inline-block;
+      background: var(--color-gold);
+      color: #FFFFFF;
+      font-family: var(--font-display);
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: 0.15em;
+      padding: 6px 18px;
+      border-radius: 40px;
+      margin-bottom: 16px;
+    }
+    .mf-title {
+      font-size: clamp(20px, 3vw, 26px);
+      font-weight: 700;
+      line-height: 1.5;
+      color: var(--color-text);
+      margin-bottom: 20px;
+    }
+    .mf-desc {
+      background: var(--color-surface);
+      border: 1px solid var(--color-border);
+      border-radius: 12px;
+      padding: 24px 26px;
+    }
+    .mf-desc p {
+      font-size: 14px;
+      line-height: 1.9;
+      color: var(--color-text-muted);
+    }
+    .mf-desc p:last-child {
+      color: var(--color-text);
+      margin-top: 8px;
+    }
+    @media (max-width: 720px) {
+      .merit-feature { grid-template-columns: 1fr; gap: 20px; }
+      .merit-feature .mf-media,
+      .merit-feature:nth-child(even) .mf-media { order: -1; }
+      .merit-feature .mf-body,
+      .merit-feature:nth-child(even) .mf-body { order: 0; }
+    }
+
+    /* メリット4：サービスの流れ（囲みなし・上から下へスライド表示） */
+    /* 枠は高さぶんの領域を確保し、中身を translateY(-100%)→0 で上から下へ滑らせる */
+    .sweep {
+      margin-top: 44px;
+      overflow: hidden;
+    }
+    .js .sweep .sweep-inner {
+      display: flow-root; /* 子のmargin相殺を防ぎ、高さに含める（translateY(-100%)で全体を隠すため） */
+      transform: translateY(-100%);
+      transition: transform 1s ease;
+    }
+    .js .sweep.is-open .sweep-inner {
+      transform: translateY(0);
+    }
+    .sweep-end {
+      display: block;
+      height: 1px;
+      margin: 0;
+    }
+    /* reduced-motion でも「上から下へスライド」を見せる（意図的にアニメを維持） */
+    .merit-flow-title {
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--color-gold);
+      padding-top: 28px;
+    }
+
+    /* 横ステッパー */
+    .stepper {
+      list-style: none;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 10px 4px;
+      margin: 20px 0 4px;
+    }
+    .stepper .step {
+      display: inline-flex;
+      align-items: center;
+    }
+    .step-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--color-bg);
+      border: 1px solid var(--color-border);
+      border-radius: 40px;
+      padding: 7px 16px 7px 7px;
+      font-size: 13.5px;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+    .step-num {
+      width: 26px;
+      height: 26px;
+      border-radius: 50%;
+      background: var(--color-gold);
+      color: #FFFFFF;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--font-display);
+      font-size: 14px;
+      flex-shrink: 0;
+    }
+    .stepper .step:not(:last-child)::after {
+      content: '›';
+      color: var(--color-gold);
+      font-weight: 700;
+      font-size: 18px;
+      margin: 0 6px;
+    }
+
+    /* ステップ詳細 */
+    .flow-details-body {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 16px 32px;
+      margin-top: 24px;
+      padding-top: 4px;
+    }
+    .flow-detail h5 {
+      font-size: 15px;
+      font-weight: 700;
+      margin-bottom: 2px;
+    }
+    .flow-detail p {
+      font-size: 14px;
+      color: var(--color-text-muted);
+      line-height: 1.8;
+    }
+    @media (max-width: 600px) {
+      .flow-details-body { grid-template-columns: 1fr; }
+    }
+
+    /* ============================================
        比較表
     ============================================ */
     .compare {
@@ -526,7 +813,7 @@
     }
 
     .compare-table tbody tr:nth-child(even) td {
-      background: rgba(255,255,255,0.015);
+      background: rgba(0,0,0,0.02);
     }
 
     .compare-table td.ours {
@@ -537,6 +824,139 @@
 
     .compare-table td.theirs {
       color: var(--color-text-muted);
+    }
+
+    /* ============================================
+       比較（VS）ブロック
+    ============================================ */
+    .vs-head { text-align: center; }
+    .vs-eyebrow {
+      display: inline-flex; align-items: center; gap: 14px;
+      font-size: 14px; font-weight: 700; color: var(--color-gold);
+      letter-spacing: 0.04em; margin-bottom: 16px;
+    }
+    .vs-eyebrow::before,
+    .vs-eyebrow::after {
+      content: ''; width: 22px; height: 1.5px;
+      background: var(--color-gold); border-radius: 2px;
+    }
+    .vs-eyebrow::before { transform: rotate(20deg); }
+    .vs-eyebrow::after  { transform: rotate(-20deg); }
+
+    .vs-title {
+      font-size: clamp(28px, 6vw, 54px);
+      font-weight: 700; line-height: 1.25;
+      letter-spacing: 0.01em; margin-bottom: 18px;
+      color: var(--color-text);
+    }
+    .vs-title em { font-style: normal; color: var(--color-gold); }
+    .vs-lead {
+      font-size: clamp(14px, 2.2vw, 18px);
+      color: var(--color-text-muted); line-height: 1.8;
+    }
+
+    .vs-compare-head { text-align: center; margin: 48px 0 28px; }
+    .vs-compare-head span {
+      display: inline-flex; align-items: center; gap: 16px;
+      font-size: clamp(18px, 3vw, 24px); font-weight: 700; color: var(--color-text);
+    }
+    .vs-compare-head span::before,
+    .vs-compare-head span::after {
+      content: ''; width: 26px; height: 2px; background: var(--color-gold); border-radius: 2px;
+    }
+    .vs-compare-head span::before { transform: rotate(20deg); }
+    .vs-compare-head span::after  { transform: rotate(-20deg); }
+
+    .vs-table-scroll { overflow-x: auto; padding: 2px; }
+    .vs-table {
+      position: relative;
+      min-width: 720px;
+      display: grid;
+      grid-template-columns: 176px 1fr 1fr;
+      padding-top: 16px;
+      align-items: stretch;
+    }
+    .vs-corner { }
+
+    /* ヘッダー */
+    .vs-th {
+      display: flex; align-items: center; gap: 10px;
+      padding: 20px 22px; font-weight: 700; color: #fff;
+      border-radius: 16px 16px 0 0;
+    }
+    .vs-th svg { width: 26px; height: 26px; flex-shrink: 0; }
+    .vs-th-rec {
+      position: relative;
+      background: linear-gradient(135deg, #C9A84C 0%, #A9822B 100%);
+      font-size: 19px; margin-right: 8px;
+      box-shadow: 0 12px 30px -12px rgba(169,130,43,0.7);
+    }
+    .vs-th-other {
+      background: #2E2A24; font-size: 17px; margin-left: 8px;
+    }
+    .vs-ribbon {
+      position: absolute; top: -12px; left: 16px;
+      background: #1A1A1A; color: var(--color-gold-light);
+      font-size: 11px; font-weight: 700; letter-spacing: 0.08em;
+      padding: 5px 14px; border-radius: 40px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.25);
+    }
+
+    /* 行ラベル */
+    .vs-rowlabel {
+      display: flex; align-items: center; gap: 10px;
+      padding: 18px 16px 18px 4px; font-size: 14px; font-weight: 700;
+      color: var(--color-text);
+      border-bottom: 1px solid var(--color-border);
+    }
+    .vs-rowlabel svg {
+      width: 20px; height: 20px; flex-shrink: 0;
+      stroke: var(--color-gold); fill: none;
+      stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round;
+    }
+
+    /* セル */
+    .vs-cell {
+      display: flex; align-items: center; gap: 12px;
+      padding: 18px 22px; font-size: 15px; line-height: 1.6;
+      border-bottom: 1px solid var(--color-border);
+    }
+    .vs-cell svg.ic { width: 24px; height: 24px; flex-shrink: 0; }
+    .vs-cell-rec {
+      background: rgba(201,168,76,0.07);
+      border-left: 1px solid rgba(169,130,43,0.30);
+      border-right: 1px solid rgba(169,130,43,0.30);
+      color: var(--color-text); font-weight: 700;
+      margin-right: 8px;
+    }
+    .vs-cell-other {
+      background: var(--color-bg);
+      border-left: 1px solid var(--color-border);
+      border-right: 1px solid var(--color-border);
+      color: var(--color-text-muted);
+      margin-left: 8px;
+    }
+    .vs-cell .vs-em { color: var(--color-gold); font-size: 1.1em; }
+    .vs-cell-rec.is-last {
+      border-bottom: 1px solid rgba(169,130,43,0.30);
+      border-radius: 0 0 16px 16px;
+    }
+    .vs-cell-other.is-last {
+      border-radius: 0 0 16px 16px;
+    }
+
+    /* VSバッジ（ラベル列176px → 2枚のカード境界 = 50% + 88px） */
+    .vs-badge {
+      position: absolute; top: 50%; left: calc(50% + 88px);
+      transform: translate(-50%, -50%);
+      width: 60px; height: 60px; border-radius: 50%;
+      background: #2E2A24; color: #fff;
+      display: flex; align-items: center; justify-content: center;
+      font-family: var(--font-display); font-size: 20px; font-weight: 700;
+      letter-spacing: 0.02em;
+      border: 3px solid var(--color-bg);
+      box-shadow: 0 6px 18px rgba(0,0,0,0.25);
+      z-index: 3;
     }
 
     /* ============================================
@@ -594,13 +1014,13 @@
       letter-spacing: 0.05em;
     }
     /* プランごとの名前カラー */
-    .plan-name-lite   { color: #B8C4CC; }
-    .plan-name-core   { color: #C9A84C; }
-    .plan-name-office { color: #D98E4A; }
+    .plan-name-lite   { color: #5F7683; }
+    .plan-name-core   { color: #A9822B; }
+    .plan-name-office { color: #C0742E; }
     /* 下位プラン全機能の注記カラー（含まれるプランの色と対応） */
     .plan-incl { font-weight: 700; }
-    .plan-features li.plan-incl-lite { color: #B8C4CC; }
-    .plan-features li.plan-incl-core { color: #C9A84C; }
+    .plan-features li.plan-incl-lite { color: #5F7683; }
+    .plan-features li.plan-incl-core { color: #A9822B; }
 
     .plan-price {
       font-size: 32px;
@@ -646,7 +1066,7 @@
     .plan-features li.plan-incl::before { color: inherit; }
 
     .plan-lead {
-      font-size: 13px; color: var(--color-gold-light); line-height: 1.7; margin-top: 6px;
+      font-size: 13px; color: var(--color-gold); line-height: 1.7; margin-top: 6px;
     }
     .plan-note {
       font-size: 12px;
@@ -768,17 +1188,10 @@
       font-size: 15px;
       font-weight: 700;
       text-align: left;
-      padding: 24px 28px;
-      cursor: pointer;
+      padding: 24px 28px 0;
       display: flex;
-      justify-content: space-between;
       align-items: center;
       gap: 16px;
-      transition: color 0.2s;
-    }
-
-    .faq-q:hover {
-      color: var(--color-gold);
     }
 
     .faq-q .q-label {
@@ -791,42 +1204,26 @@
 
     .faq-q .q-text { flex: 1; }
 
-    .faq-arrow {
-      width: 20px;
-      height: 20px;
-      stroke: var(--color-gold);
-      stroke-width: 2;
-      fill: none;
-      flex-shrink: 0;
-      transition: transform 0.3s;
-    }
-
-    .faq-item.open .faq-arrow {
-      transform: rotate(180deg);
-    }
-
-    .faq-a {
-      max-height: 0;
-      overflow: hidden;
-      transition: max-height 0.3s ease;
-    }
-
     .faq-a-inner {
-      padding: 0 28px 24px;
+      padding: 20px 28px 24px;
       font-size: 14px;
       color: var(--color-text-muted);
       line-height: 1.9;
-      border-top: 1px solid var(--color-border);
-      padding-top: 20px;
     }
 
     /* ============================================
        クロージング
     ============================================ */
     .closing {
-      text-align: center;
       position: relative;
       overflow: hidden;
+      min-height: 560px;
+      display: flex;
+      align-items: center;
+      background:
+        linear-gradient(90deg, rgba(255,255,255,0.98) 0%, rgba(255,255,255,0.9) 42%, rgba(255,255,255,0.35) 66%, rgba(255,255,255,0) 100%),
+        url('images/FinalPush.png') right center / auto 100% no-repeat,
+        #FFFFFF;
     }
 
     .closing::before {
@@ -834,15 +1231,15 @@
       position: absolute;
       inset: 0;
       background:
-        radial-gradient(ellipse 70% 60% at 50% 50%, rgba(201,168,76,0.07) 0%, transparent 70%);
+        radial-gradient(ellipse 46% 58% at 24% 48%, rgba(201,168,76,0.09) 0%, transparent 72%);
       pointer-events: none;
     }
 
     .closing-inner {
       position: relative;
       z-index: 1;
-      max-width: 680px;
-      margin: 0 auto;
+      max-width: 560px;
+      margin: 0 0 0 -10em;
     }
 
     .closing-title {
@@ -865,6 +1262,41 @@
       word-break: keep-all;
       overflow-wrap: break-word;
       text-wrap: pretty;
+    }
+
+    .closing .btn-group {
+      justify-content: flex-start;
+    }
+
+    @media (max-width: 860px) {
+      .closing {
+        min-height: 720px;
+        align-items: flex-end;
+        padding-bottom: 56px;
+        background:
+          linear-gradient(180deg, rgba(255,255,255,0.04) 0%, rgba(255,255,255,0.34) 40%, rgba(255,255,255,0.96) 72%, #FFFFFF 100%),
+          url('images/FinalPush.png') right top / min(92vw, 460px) auto no-repeat,
+          #FFFFFF;
+      }
+
+      .closing-inner {
+        max-width: 100%;
+        margin-left: 0;
+      }
+    }
+
+    @media (max-width: 560px) {
+      .closing {
+        min-height: 680px;
+        background:
+          linear-gradient(180deg, rgba(255,255,255,0.03) 0%, rgba(255,255,255,0.24) 36%, rgba(255,255,255,0.97) 68%, #FFFFFF 100%),
+          url('images/FinalPush.png') 72% top / 480px auto no-repeat,
+          #FFFFFF;
+      }
+
+      .closing-sub br {
+        display: none;
+      }
     }
 
     /* ============================================
@@ -963,7 +1395,7 @@
     @media (prefers-reduced-motion: reduce){ .spinner{ animation-duration: 1.6s; } }
 
     .form-note {
-      font-size: 12.5px; color: #B0B0B0;
+      font-size: 12.5px; color: var(--color-text-muted);
       margin-top: 16px; line-height: 1.7; text-align: center;
     }
     .form-note a { color: var(--color-gold); text-decoration: underline; }
@@ -988,7 +1420,7 @@
     .form-demo-note {
       margin-top: 18px; padding: 10px 14px;
       background: rgba(201,168,76,0.06); border: 1px dashed rgba(201,168,76,0.4);
-      border-radius: 2px; font-size: 12.5px; color: var(--color-gold-light); line-height: 1.65;
+      border-radius: 2px; font-size: 12.5px; color: var(--color-gold); line-height: 1.65;
     }
 
     @media (max-width: 860px) {
@@ -1002,7 +1434,7 @@
        フッター
     ============================================ */
     .footer {
-      background: #0A0A0A;
+      background: var(--color-surface);
       border-top: 1px solid var(--color-border);
       padding: 40px 24px;
       text-align: center;
@@ -1023,7 +1455,7 @@
       z-index: 90;
       transition: transform 0.3s ease, opacity 0.3s ease;
       padding: 12px 16px calc(12px + env(safe-area-inset-bottom));
-      background: rgba(17,17,17,0.96);
+      background: rgba(255,255,255,0.96);
       backdrop-filter: blur(8px);
       border-top: 1px solid var(--color-border);
     }
@@ -1119,15 +1551,45 @@
   ============================================ -->
   <section class="pain section">
     <div class="container">
-      <h2 class="visually-hidden">このようなお悩みはありませんか？</h2>
-
-      <div class="pain-image fade-in">
-        <img src="images/assignment.png" alt="このようなお悩みはありませんか？ 月末になると請求書作成に追われる／営業担当が事務作業を兼務している／社長自ら請求業務を行っている／事務担当が退職すると業務が止まる／エンジニアが増えるほど管理工数が増える／管理部門を増やす余裕がない">
+      <div class="fade-in pain-head">
+        <h2 class="section-title">こんな<em>SESバックオフィス運営</em>のお悩みありませんか？</h2>
+        <div class="divider"></div>
       </div>
 
-      <div class="pain-image fade-in">
+      <div class="pain-grid fade-in">
+        <div class="pain-card">
+          <img src="images/assignment1.png" alt="月末になると請求書作成に追われる">
+          <h3>月末になると請求書作成に追われる</h3>
+        </div>
+        <div class="pain-card">
+          <img src="images/assignment2.png" alt="営業担当が事務作業を兼務している">
+          <h3>営業担当が事務作業を兼務している</h3>
+        </div>
+        <div class="pain-card">
+          <img src="images/assignment3.png" alt="社長自ら請求業務を行っている">
+          <h3>社長自ら請求業務を行っている</h3>
+        </div>
+        <div class="pain-card">
+          <img src="images/assignment4.png" alt="事務担当が退職すると業務が止まる">
+          <h3>事務担当が退職すると業務が止まる</h3>
+        </div>
+        <div class="pain-card">
+          <img src="images/assignment5.png" alt="エンジニアが増えるほど管理工数が増える">
+          <h3>エンジニアが増えるほど管理工数が増える</h3>
+        </div>
+        <div class="pain-card">
+          <img src="images/assignment6.png" alt="管理部門を増やす余裕がない">
+          <h3>管理部門を増やす余裕がない</h3>
+        </div>
+      </div>
+
+      <div class="pain-chevron fade-in" aria-hidden="true">
+        <svg viewBox="0 0 56 34"><polyline points="6,4 28,22 50,4"/><polyline points="6,16 28,34 50,16"/></svg>
+      </div>
+
+      <!-- <div class="pain-image fade-in">
         <img src="images/Opportunity_loss.png" alt="SES企業 成長の限界：バックオフィスの罠。SES企業の成長を止める原因は、営業力ではなく『バックオフィスの限界』であることが少なくありません。本来の成長曲線に対し、事務作業による時間の損失で案件獲得数が350から100へ大幅に停滞する。">
-      </div>
+      </div> -->
     </div>
   </section>
 
@@ -1136,124 +1598,132 @@
   ============================================ -->
   <section class="section">
     <div class="container">
-      <div class="fade-in">
-        <h2 class="section-title">SESバックオフィス運営のサービス内容</h2>
-        <div class="divider"></div>
+      <!-- メリット概要カード（見出し＋画像のみ） -->
+      <div class="merit-cards fade-in">
+        <div class="pain-card">
+          <img src="images/merit1.png" alt="営業時間を取り戻せる">
+          <h3>解決策1：営業時間を取り戻せる</h3>
+        </div>
+        <div class="pain-card">
+          <img src="images/merit2.png" alt="管理部門を増やさなくてよい">
+          <h3>解決策2：管理部門を増やさなくてよい</h3>
+        </div>
+        <div class="pain-card">
+          <img src="images/merit3.png" alt="属人化を防げる">
+          <h3>解決策3：属人化を防げる</h3>
+        </div>
+        <div class="pain-card">
+          <img src="images/merit4.png" alt="SES業界に特化">
+          <h3>解決策4：SES業界に特化</h3>
+        </div>
       </div>
 
       <div class="solution-box fade-in">
         <p>
-          <span class="gold">SES企業専門</span>のバックオフィス運営サービスです。<br>
-          勤怠管理から請求・給与関連業務までを一括で支援し、<br>
-          管理部門を増やすことなく事業拡大をサポートします。
+          <span class="solution-lead gold">SES企業専門に特化したサービスです</span><br>
+          勤怠管理から請求・給与関連業務までを一括で支援し、管理部門を増やすことなく事業拡大をサポートします。
         </p>
       </div>
 
-      <div class="service-merits fade-in">
-        <div class="merit">
-          <h3>メリット1：営業時間を取り戻せる</h3>
-          <div class="merit-quotes">
-            <p>『月末になると請求書作成に追われる』</p>
-            <p>『営業担当が事務作業を兼務している』</p>
-            <p>『社長自ら請求業務を行っている』</p>
+      <!-- メリット詳細（左右交互レイアウト） -->
+      <div class="merit-features fade-in">
+        <div class="merit-feature">
+          <div class="mf-media"><img src="images/merit1.png" alt=""></div>
+          <div class="mf-body">
+            <h3 class="mf-title">1：営業時間を取り戻せる</h3>
+            <div class="mf-desc">
+              <p>『月末になると請求書作成に追われる』</p>
+              <p>『営業担当が事務作業を兼務している』</p>
+              <p>『社長自ら請求業務を行っている』</p>
+              <p>——こうしたお悩みを月末業務の代行で解消し、営業活動・採用活動へ時間を使えます。</p>
+            </div>
           </div>
-          <p class="merit-solution">——こうしたお悩みを月末業務の代行で解消し、営業活動・採用活動へ時間を使えます。</p>
         </div>
-        <div class="merit">
-          <h3>メリット2：管理部門を増やさなくてよい</h3>
-          <div class="merit-quotes">
-            <p>『エンジニアが増えるほど管理工数が増える』</p>
-            <p>『管理部門を増やす余裕がない』</p>
+        <div class="merit-feature">
+          <div class="mf-media"><img src="images/merit2.png" alt=""></div>
+          <div class="mf-body">
+            <h3 class="mf-title">2：管理部門を増やさなくてよい</h3>
+            <div class="mf-desc">
+              <p>『エンジニアが増えるほど管理工数が増える』</p>
+              <p>『管理部門を増やす余裕がない』</p>
+              <p>——こうしたお悩みに対し、エンジニア数が増えてもバックオフィス人員を最小限に抑えられます。</p>
+            </div>
           </div>
-          <p class="merit-solution">——こうしたお悩みに対し、エンジニア数が増えてもバックオフィス人員を最小限に抑えられます。</p>
         </div>
-        <div class="merit">
-          <h3>メリット3：属人化を防げる</h3>
-          <div class="merit-quotes">
-            <p>『事務担当が退職すると業務が止まる』</p>
+        <div class="merit-feature">
+          <div class="mf-media"><img src="images/merit3.png" alt=""></div>
+          <div class="mf-body">
+            <h3 class="mf-title">3：属人化を防げる</h3>
+            <div class="mf-desc">
+              <p>『事務担当が退職すると業務が止まる』</p>
+              <p>——こうしたお悩みを、標準化された運営フローで解消し、担当者が変わっても安定した品質を維持します。</p>
+            </div>
           </div>
-          <p class="merit-solution">——こうしたお悩みを、標準化された運営フローで解消し、担当者が変わっても安定した品質を維持します。</p>
         </div>
-        <div class="merit">
-          <h3>メリット4：SES業界に特化</h3>
-          <p class="merit-solution">SES特有の管理フローを前提に運営します。</p>
+        <div class="merit-feature">
+          <div class="mf-media"><img src="images/merit4.png" alt=""></div>
+          <div class="mf-body">
+            <h3 class="mf-title">4：SES業界に特化</h3>
+            <div class="mf-desc">
+              <p>SES特有の管理フローを前提に運営します。</p>
+            </div>
+          </div>
         </div>
       </div>
 
-      <h3 class="section-title service-flow-title fade-in">サービスの流れ</h3>
+      <!-- ステッパー：全体が画面に収まる位置まで来たら、上から下へスライド表示 -->
+      <div class="sweep" id="flow">
+       <div class="sweep-inner">
+        <h4 class="merit-flow-title">サービスの流れ</h4>
+        <ol class="stepper">
+          <li class="step"><span class="step-pill"><span class="step-num">1</span>勤怠回収</span></li>
+          <li class="step"><span class="step-pill"><span class="step-num">2</span>勤怠チェック</span></li>
+          <li class="step"><span class="step-pill"><span class="step-num">3</span>稼働一覧作成</span></li>
+          <li class="step"><span class="step-pill"><span class="step-num">4</span>請求書作成</span></li>
+          <li class="step"><span class="step-pill"><span class="step-num">5</span>給与計算用データ作成</span></li>
+          <li class="step"><span class="step-pill"><span class="step-num">6</span>月次管理資料作成</span></li>
+          <li class="step"><span class="step-pill"><span class="step-num">7</span>納品</span></li>
+        </ol>
+       </div>
+      </div>
+      <span class="sweep-end" aria-hidden="true"></span>
 
-      <div class="flow fade-in">
-        <div class="flow-item">
-          <div class="flow-left">
-            <div class="flow-num">1</div>
-            <div class="flow-line"></div>
-          </div>
-          <div class="flow-content">
-            <h3>勤怠回収</h3>
+      <!-- 詳細：全体が画面に収まる位置まで来たら、上から下へスライド表示 -->
+      <div class="sweep">
+       <div class="sweep-inner">
+        <div class="flow-details-body">
+          <div class="flow-detail">
+            <h5>1. 勤怠回収</h5>
             <p>客先常駐しているエンジニア全員から、月末の勤務実績データを漏れなくスピーディーに集めます。</p>
           </div>
-        </div>
-        <div class="flow-item">
-          <div class="flow-left">
-            <div class="flow-num">2</div>
-            <div class="flow-line"></div>
-          </div>
-          <div class="flow-content">
-            <h3>勤怠チェック</h3>
+          <div class="flow-detail">
+            <h5>2. 勤怠チェック</h5>
             <p>回収したデータに記入漏れや計算ミス、契約上の違反（過剰労働など）がないか精査します。</p>
           </div>
-        </div>
-        <div class="flow-item">
-          <div class="flow-left">
-            <div class="flow-num">3</div>
-            <div class="flow-line"></div>
-          </div>
-          <div class="flow-content">
-            <h3>稼働一覧作成</h3>
+          <div class="flow-detail">
+            <h5>3. 稼働一覧作成</h5>
             <p>全エンジニアの正確な稼働時間を一本化し、請求や給与計算のベースとなる一覧表にまとめます。</p>
           </div>
-        </div>
-        <div class="flow-item">
-          <div class="flow-left">
-            <div class="flow-num">4</div>
-            <div class="flow-line"></div>
-          </div>
-          <div class="flow-content">
-            <h3>請求書作成</h3>
+          <div class="flow-detail">
+            <h5>4. 請求書作成</h5>
             <p>SES特有の精算幅（上限・下限時間）や単価に基づき、クライアント向けの請求書を正確に発行します。</p>
           </div>
-        </div>
-        <div class="flow-item">
-          <div class="flow-left">
-            <div class="flow-num">5</div>
-            <div class="flow-line"></div>
-          </div>
-          <div class="flow-content">
-            <h3>給与計算用データ作成</h3>
+          <div class="flow-detail">
+            <h5>5. 給与計算用データ作成</h5>
             <p>基本給や残業代・控除額など、そのまま給与計算ソフトや社労士に渡せる形式のデータを用意します。</p>
           </div>
-        </div>
-        <div class="flow-item">
-          <div class="flow-left">
-            <div class="flow-num">6</div>
-            <div class="flow-line"></div>
-          </div>
-          <div class="flow-content">
-            <h3>月次管理資料作成</h3>
+          <div class="flow-detail">
+            <h5>6. 月次管理資料作成</h5>
             <p>当月の売上や粗利、エンジニアごとの稼働状況など、経営判断に必要な数字をレポート化します。</p>
           </div>
-        </div>
-        <div class="flow-item">
-          <div class="flow-left">
-            <div class="flow-num">7</div>
-            <div class="flow-line"></div>
-          </div>
-          <div class="flow-content">
-            <h3>納品</h3>
+          <div class="flow-detail">
+            <h5>7. 納品</h5>
             <p>作成したすべての書類やデータを、不備のない完璧な状態で期日までにクライアントへ引き渡します。</p>
           </div>
         </div>
+       </div>
       </div>
+      <span class="sweep-end" aria-hidden="true"></span>
     </div>
   </section>
 
@@ -1262,43 +1732,87 @@
   ============================================ -->
   <section class="compare section">
     <div class="container">
-      <div class="fade-in">
-        <h2 class="section-title">他社との違い</h2>
-        <div class="divider"></div>
+      <div class="fade-in vs-head">
+        <span class="vs-eyebrow">一般的な事務代行との違い</span>
+        <h2 class="vs-title">SESバックオフィスの事務代行に<em>特化</em>。</h2>
+        <p class="vs-lead">幅広い業種向けの事務代行とは違い、SES特有の月末業務を前提に設計しています。</p>
       </div>
 
-      <div class="fade-in" style="overflow-x:auto;">
-        <table class="compare-table">
-          <thead>
-            <tr>
-              <th>比較項目</th>
-              <th class="theirs">一般的な事務代行</th>
-              <th class="highlight">SESバックオフィス運営サービス</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>対象業種</td>
-              <td class="theirs">幅広い業種向け</td>
-              <td class="ours">SES業界専門</td>
-            </tr>
-            <tr>
-              <td>対応業務</td>
-              <td class="theirs">一般事務中心</td>
-              <td class="ours">SES特有の月末業務に対応</td>
-            </tr>
-            <tr>
-              <td>サポート範囲</td>
-              <td class="theirs">業務単位で対応</td>
-              <td class="ours">バックオフィス全体を支援</td>
-            </tr>
-            <tr>
-              <td>業界知識</td>
-              <td class="theirs">業務知識が必要</td>
-              <td class="ours">SES運営を前提に設計</td>
-            </tr>
-          </tbody>
-        </table>
+      <!-- 比較でわかる違い -->
+      <div class="vs-compare-head fade-in"><span>違いを比較で</span></div>
+
+      <div class="fade-in vs-table-scroll">
+        <div class="vs-table">
+          <span class="vs-badge">VS</span>
+
+          <!-- ヘッダー行 -->
+          <div class="vs-corner"></div>
+          <div class="vs-th vs-th-rec">
+            <span class="vs-ribbon">おすすめ</span>
+            <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l8.7 5v10L12 22 3.3 17V7z"/><path d="M15 9.2c-.8-1-2-1.4-3.2-1.4-1.6 0-2.8.8-2.8 2 0 2.8 6 1.4 6 4.4 0 1.3-1.3 2.2-3 2.2-1.4 0-2.6-.5-3.3-1.5"/></svg>
+            SESバックオフィス運営サービス
+          </div>
+          <div class="vs-th vs-th-other">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="3.4"/><path d="M5 20c0-3.9 3.1-7 7-7s7 3.1 7 7"/></svg>
+            一般的な事務代行
+          </div>
+
+          <!-- 対象業種 -->
+          <div class="vs-rowlabel">
+            <svg viewBox="0 0 24 24"><rect x="3" y="7" width="18" height="13" rx="2"/><path d="M8 7V5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2M3 12h18"/></svg>
+            対象業種
+          </div>
+          <div class="vs-cell vs-cell-rec">
+            <svg class="ic" viewBox="0 0 24 24"><circle cx="12" cy="12" r="11" fill="#A9822B"/><path d="M7 12.5l3.2 3.2L17 9" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            <span class="vs-em">SES業界</span>専門特化
+          </div>
+          <div class="vs-cell vs-cell-other">
+            <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="#a8a08a" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l10 17H2L12 3z"/><path d="M12 10v4"/><circle cx="12" cy="17" r="0.6" fill="#a8a08a" stroke="none"/></svg>
+            幅広い業種向け
+          </div>
+
+          <!-- 対応業務 -->
+          <div class="vs-rowlabel">
+            <svg viewBox="0 0 24 24"><rect x="5" y="4" width="14" height="17" rx="2"/><path d="M9 4V3h6v1M8.5 10h7M8.5 14h7M8.5 18h4.5"/></svg>
+            対応業務
+          </div>
+          <div class="vs-cell vs-cell-rec">
+            <svg class="ic" viewBox="0 0 24 24"><circle cx="12" cy="12" r="11" fill="#A9822B"/><path d="M7 12.5l3.2 3.2L17 9" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            SES特有の月末業務に対応
+          </div>
+          <div class="vs-cell vs-cell-other">
+            <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="#a8a08a" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l10 17H2L12 3z"/><path d="M12 10v4"/><circle cx="12" cy="17" r="0.6" fill="#a8a08a" stroke="none"/></svg>
+            一般事務中心
+          </div>
+
+          <!-- サポート範囲 -->
+          <div class="vs-rowlabel">
+            <svg viewBox="0 0 24 24"><path d="M12 3l9 5-9 5-9-5 9-5z"/><path d="M3 12l9 5 9-5"/><path d="M3 16l9 5 9-5"/></svg>
+            サポート範囲
+          </div>
+          <div class="vs-cell vs-cell-rec">
+            <svg class="ic" viewBox="0 0 24 24"><circle cx="12" cy="12" r="11" fill="#A9822B"/><path d="M7 12.5l3.2 3.2L17 9" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            バックオフィス全体を支援
+          </div>
+          <div class="vs-cell vs-cell-other">
+            <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="#a8a08a" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l10 17H2L12 3z"/><path d="M12 10v4"/><circle cx="12" cy="17" r="0.6" fill="#a8a08a" stroke="none"/></svg>
+            業務単位で対応
+          </div>
+
+          <!-- 業界知識 -->
+          <div class="vs-rowlabel">
+            <svg viewBox="0 0 24 24"><path d="M9 18h6M10 21h4"/><path d="M12 3a6 6 0 0 0-4 10.5c.7.7 1 1.2 1 2.5h6c0-1.3.3-1.8 1-2.5A6 6 0 0 0 12 3z"/></svg>
+            業界知識
+          </div>
+          <div class="vs-cell vs-cell-rec is-last">
+            <svg class="ic" viewBox="0 0 24 24"><circle cx="12" cy="12" r="11" fill="#A9822B"/><path d="M7 12.5l3.2 3.2L17 9" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            SES運営を前提に設計
+          </div>
+          <div class="vs-cell vs-cell-other is-last">
+            <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="#a8a08a" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l10 17H2L12 3z"/><path d="M12 10v4"/><circle cx="12" cy="17" r="0.6" fill="#a8a08a" stroke="none"/></svg>
+            業務知識が必要
+          </div>
+        </div>
       </div>
     </div>
   </section>
@@ -1443,51 +1957,46 @@
 
       <div class="faq-list fade-in">
         <div class="faq-item">
-          <button class="faq-q" aria-expanded="false">
+          <div class="faq-q">
             <span class="q-label">Q.</span>
             <span class="q-text">何名規模から利用できますか？</span>
-            <svg class="faq-arrow" viewBox="0 0 20 20"><polyline points="4,7 10,13 16,7"/></svg>
-          </button>
+          </div>
           <div class="faq-a">
             <div class="faq-a-inner">10名程度から100名程度までを想定しています。</div>
           </div>
         </div>
         <div class="faq-item">
-          <button class="faq-q" aria-expanded="false">
+          <div class="faq-q">
             <span class="q-label">Q.</span>
             <span class="q-text">現在Excel管理ですが利用できますか？</span>
-            <svg class="faq-arrow" viewBox="0 0 20 20"><polyline points="4,7 10,13 16,7"/></svg>
-          </button>
+          </div>
           <div class="faq-a">
             <div class="faq-a-inner">はい。現在の運用フローを確認したうえで導入できます。</div>
           </div>
         </div>
         <div class="faq-item">
-          <button class="faq-q" aria-expanded="false">
+          <div class="faq-q">
             <span class="q-label">Q.</span>
             <span class="q-text">途中から利用できますか？</span>
-            <svg class="faq-arrow" viewBox="0 0 20 20"><polyline points="4,7 10,13 16,7"/></svg>
-          </button>
+          </div>
           <div class="faq-a">
             <div class="faq-a-inner">月途中でも導入可能です。</div>
           </div>
         </div>
         <div class="faq-item">
-          <button class="faq-q" aria-expanded="false">
+          <div class="faq-q">
             <span class="q-label">Q.</span>
             <span class="q-text">自社の運用に合わせてもらえますか？</span>
-            <svg class="faq-arrow" viewBox="0 0 20 20"><polyline points="4,7 10,13 16,7"/></svg>
-          </button>
+          </div>
           <div class="faq-a">
             <div class="faq-a-inner">ヒアリングを行い、可能な範囲で運用に合わせます。</div>
           </div>
         </div>
         <div class="faq-item">
-          <button class="faq-q" aria-expanded="false">
+          <div class="faq-q">
             <span class="q-label">Q.</span>
             <span class="q-text">契約期間はありますか？</span>
-            <svg class="faq-arrow" viewBox="0 0 20 20"><polyline points="4,7 10,13 16,7"/></svg>
-          </button>
+          </div>
           <div class="faq-a">
             <div class="faq-a-inner">最低契約期間は3か月です。</div>
           </div>
@@ -1511,7 +2020,7 @@
           日々のバックオフィス業務を支援します。<br>
           管理部門を増やすことなく、安心して事業拡大できる環境をご提供します。
         </p>
-        <div class="btn-group" style="justify-content:center;">
+        <div class="btn-group">
           <a href="#contact" class="btn btn-primary">お問い合わせはこちら</a>
           <a href="#download" class="btn btn-outline">サービス資料ダウンロード</a>
         </div>
@@ -1568,7 +2077,7 @@
 
             <div class="form-field">
               <label for="f-message">お問い合わせ内容<span class="opt">任意</span></label>
-              <textarea id="f-message" class="form-control" placeholder="現在のエンジニア人数や、お困りごとなどをご記入いただけるとスムーズです。"></textarea>
+              <textarea id="f-message" class="form-control" placeholder="現在のエンジニア人数や、お困りごとなどをご記入"></textarea>
             </div>
 
             <button type="button" class="btn btn-primary form-submit" id="submitBtn">送信する</button>
@@ -1614,28 +2123,6 @@
        JavaScript
   ============================================ -->
   <script>
-    // FAQ アコーディオン
-    document.querySelectorAll('.faq-q').forEach(btn => {
-      btn.addEventListener('click', () => {
-        const item = btn.closest('.faq-item');
-        const answer = item.querySelector('.faq-a');
-        const isOpen = item.classList.contains('open');
-
-        // 全部閉じる
-        document.querySelectorAll('.faq-item').forEach(el => {
-          el.classList.remove('open');
-          el.querySelector('.faq-a').style.maxHeight = '0';
-          el.querySelector('.faq-q').setAttribute('aria-expanded', 'false');
-        });
-
-        // クリックしたものを開く（既に開いていれば閉じたまま）
-        if (!isOpen) {
-          item.classList.add('open');
-          answer.style.maxHeight = answer.scrollHeight + 'px';
-          btn.setAttribute('aria-expanded', 'true');
-        }
-      });
-    });
 
     // ============================================
     // CTA意図をフォーム種別へ引き継ぐ（導線の連続性）
@@ -1758,6 +2245,33 @@
     } else {
       faders.forEach(el => el.classList.add('visible'));
     }
+
+    // .sweep-end（各ブロック直後の番兵）が画面に入ったら＝直前の .sweep 全体が
+    // 画面に収まる位置まで来たら、そのブロックを上から下へワイプ表示する。
+    // 番兵は clip-path の外に置く（内側だと切り取られて交差判定されないため）。
+    (function () {
+      const sentinels = document.querySelectorAll('.sweep-end');
+      if (!sentinels.length) return;
+      const reveal = s => {
+        const block = s.previousElementSibling;
+        if (block && block.classList.contains('sweep')) block.classList.add('is-open');
+      };
+      if (!('IntersectionObserver' in window)) {
+        sentinels.forEach(reveal);
+        return;
+      }
+      sentinels.forEach(sentinel => {
+        const obs = new IntersectionObserver((entries, o) => {
+          entries.forEach(entry => {
+            if (entry.isIntersecting) {
+              reveal(sentinel);
+              o.disconnect();
+            }
+          });
+        }, { threshold: 0 });
+        obs.observe(sentinel);
+      });
+    })();
 
     // フォーム表示中はスマホ追従CTAを隠す（重なり・二重CTA回避）
     const contactSec = document.getElementById('contact');
