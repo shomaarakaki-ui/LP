@@ -5,8 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>CoreDesk｜管理部門を増やさずに、SES事業を成長させる。</title>
   <meta name="description" content="勤怠管理・請求書作成・給与計算用データ作成など、SES企業の月末業務をまるごと代行。社長や営業担当者が売上をつくる仕事に集中できる環境を提供します。">
-  <link rel="icon" type="image/png" href="images/ses_icon_favicon.png">
-  <link rel="apple-touch-icon" href="images/ses_icon_favicon.png">
+  <link rel="icon" type="image/png" href="images/core_icon.png">
+  <link rel="apple-touch-icon" href="images/core_icon.png">
   <meta property="og:image" content="images/ses_icon.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -470,8 +470,22 @@
     /* ============================================
        サービス紹介（〜とは）
     ============================================ */
-    .about { text-align: center; padding-top: 64px; }
-    .about .container { max-width: 880px; }
+    .about { text-align: center; padding-top: 64px; position: relative; overflow: hidden; }
+    .about::after {
+      content: 'Core\A Desk';
+      white-space: pre;
+      text-align: right;
+      position: absolute;
+      top: -10px;
+      right: 0;
+      font-family: var(--font-display);
+      font-size: clamp(72px, 12vw, 132px);
+      font-weight: 600;
+      line-height: 1;
+      color: rgba(169,130,43,0.08);
+      pointer-events: none;
+    }
+    .about .container { max-width: 880px; position: relative; z-index: 1; }
     .about-name {
       font-size: clamp(24px, 4.4vw, 40px);
       font-weight: 700;
