@@ -81,12 +81,14 @@
     .section-label {
       display: inline-block;
       font-family: var(--font-display);
-      font-size: 11px;
+      font-size: 15px;
       letter-spacing: 0.25em;
       text-transform: uppercase;
       color: var(--color-gold);
       margin-bottom: 16px;
     }
+    .section-label::before { content: "\\ "; }
+    .section-label::after { content: " /"; }
 
     .section-title {
       font-size: clamp(24px, 4vw, 38px);
@@ -237,20 +239,23 @@
       position: relative;
       z-index: 1;
       display: grid;
-      grid-template-columns: 1fr 1fr;
+      grid-template-columns: 1.05fr 0.95fr;
       gap: 24px;
       align-items: center;
     }
 
     .hero-media {
       position: relative;
+      /* 画像に焼き込まれた左右の余白ぶん、被写体をテキスト側へ寄せる */
+      margin-left: -6%;
     }
 
     .hero-media img {
       width: 100%;
       height: auto;
+      max-width: 612px;   /* 元画像の幅。これ以上引き伸ばさない＝ボケ防止 */
+      margin: 0 auto;
       display: block;
-      border: 1px solid var(--color-border);
     }
 
     .hero-text {
@@ -320,8 +325,38 @@
     .pain {
       background: var(--color-surface);
       border-top: 1px solid var(--color-border);
-      border-bottom: 1px solid var(--color-border);
       position: relative;
+      overflow: hidden;
+    }
+
+    .pain::after {
+      content: 'problem';
+      position: absolute;
+      top: -10px;
+      right: 0;
+      font-family: var(--font-display);
+      font-size: clamp(72px, 12vw, 132px);
+      font-weight: 600;
+      line-height: 1;
+      color: rgba(169,130,43,0.08);
+      pointer-events: none;
+    }
+
+    .pain .container {
+      position: relative;
+      z-index: 1;
+    }
+
+    /* 課題提示→提案→課題解決 を一体の帯にし、下辺の境界線をメリットの手前に置く */
+    .solution-band {
+      background: var(--color-surface);
+      border-top: 1px solid var(--color-border);
+      border-bottom: 1px solid var(--color-border);
+    }
+    /* 解決策見出しの「コアデスク」を、とは段のブランド表記と同じ書体に揃える */
+    .solution-band .section-title em {
+      font-family: var(--font-display);
+      letter-spacing: 0.02em;
     }
 
     .visually-hidden {
@@ -391,26 +426,6 @@
       color: var(--color-text);
     }
 
-    /* 悩み→次セクションへのシェブロン装飾 */
-    .pain-chevron {
-      position: absolute;
-      left: 50%;
-      bottom: 0;
-      transform: translate(-50%, 50%);
-      margin: 0;
-      z-index: 2;
-      line-height: 0;
-    }
-    .pain-chevron svg {
-      width: 56px;
-      height: auto;
-      stroke: var(--color-gold);
-      stroke-width: 2.5;
-      fill: none;
-      stroke-linecap: round;
-      stroke-linejoin: round;
-    }
-
     /* 横1×縦6（〜479px） / 横2×縦3（480〜767px） /
        横3×縦2（768〜1199px） / 横6×縦1（1200px〜） */
     @media (min-width: 480px) {
@@ -425,27 +440,149 @@
     }
 
     /* ============================================
-       解決策
+       課題→答えの転換（下向きシェブロン）
     ============================================ */
-    .solution-box {
+    .chevron-down {
+      display: flex;
+      justify-content: center;
+      color: var(--color-gold);
+      line-height: 0;
+      margin: -36px 0 -8px;
+    }
+    .chevron-down svg { width: clamp(72px, 10vw, 104px); height: auto; }
+
+    /* ============================================
+       サービス紹介（〜とは）
+    ============================================ */
+    .about { text-align: center; padding-top: 64px; }
+    .about .container { max-width: 880px; }
+    .about-name {
+      font-size: clamp(24px, 4.4vw, 40px);
+      font-weight: 700;
+      line-height: 1.4;
+      margin-bottom: 24px;
+    }
+    .about-name .about-brand {
+      display: block;
+      margin-top: 10px;
+      font-family: var(--font-display);
+      font-size: clamp(30px, 6vw, 56px);
+      color: var(--color-gold);
+      letter-spacing: 0.02em;
+    }
+    /* サービスの種類を一言で示す＝解像度を上げる帯 */
+    .about-kind {
+      max-width: 700px;
+      margin: 0 auto 24px;
       background: var(--color-surface);
       border: 1px solid var(--color-border);
-      border-top: 2px solid var(--color-gold);
-      padding: 48px;
-      border-radius: 2px;
-      margin-top: 48px;
+      border-left: 3px solid var(--color-gold);
+      border-radius: 8px;
+      padding: 18px 24px;
+      font-size: 15px;
+      line-height: 1.95;
+      text-align: left;
+      container-type: inline-size; /* 内側の幅を基準にフォントサイズを算出 */
     }
-
-    .solution-box p {
-      font-size: 16px;
-      line-height: 2;
+    .about-kind strong { color: var(--color-gold); }
+    .about-kind .kind-main {
+      display: block;
+      margin-top: 20px;
+    }
+    /* 代行する業務内容を、ボックス幅いっぱいに1行で強調表示 */
+    .about-kind .kind-highlight {
+      display: block;
+      text-align: center;
+      margin: 12px 0;
+    }
+    .about-kind .kind-highlight .kh-inner {
+      display: inline-block;
+      white-space: nowrap;
+      font-size: min(18.5px, 2.6cqw);
+      font-weight: 700;
+      letter-spacing: 0.01em;
+      padding: 2px 6px;
+      /* テキストに沿ったゴールドのマーカー下地 */
+      background: linear-gradient(transparent 58%, rgba(201, 168, 76, 0.4) 58%);
+    }
+    .about-desc {
+      max-width: 700px;
+      margin: 0 auto 48px;
       color: var(--color-text-muted);
+      font-size: 15px;
+      line-height: 1.95;
     }
-
-    .solution-lead {
-      font-size: 21px;
+    .about-features {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+      text-align: left;
+    }
+    @media (max-width: 720px) { .about-features { grid-template-columns: 1fr; } }
+    .about-feature {
+      background: var(--color-surface);
+      border: 1px solid var(--color-border);
+      border-top: 3px solid var(--color-gold);
+      border-radius: 10px;
+      padding: 28px 24px;
+    }
+    .about-feature .af-lead {
+      font-size: 19px;
       font-weight: 700;
       color: var(--color-gold);
+      margin-bottom: 10px;
+      line-height: 1.5;
+    }
+    .about-feature p {
+      font-size: 14px;
+      color: var(--color-text-muted);
+      line-height: 1.85;
+    }
+
+    /* ============================================
+       依頼できる業務内容
+    ============================================ */
+    .tasks-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 20px;
+      margin-top: 48px;
+    }
+    @media (max-width: 720px) { .tasks-grid { grid-template-columns: 1fr; } }
+    .task-cat {
+      background: var(--color-bg);
+      border: 1px solid var(--color-border);
+      border-radius: 12px;
+      overflow: hidden;
+    }
+    .task-cat-head {
+      background: var(--color-gold);
+      color: #FFFFFF;
+      font-size: 16px;
+      font-weight: 700;
+      padding: 14px 22px;
+    }
+    .task-cat ul {
+      list-style: none;
+      padding: 20px 22px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .task-cat li {
+      font-size: 14px;
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      line-height: 1.7;
+    }
+    .task-cat li::before {
+      content: '';
+      width: 6px; height: 6px;
+      margin-top: 9px;
+      border-radius: 50%;
+      background: var(--color-gold);
+      flex-shrink: 0;
     }
 
     /* ============================================
@@ -610,10 +747,10 @@
       stroke-linejoin: round;
     }
 
-    /* メリット概要カード（お悩みカードと同スタイル・.pain-card を流用） */
+    /* 課題解決策カード（お悩みカードと同スタイル・.pain-card を流用） */
     .merit-cards {
       display: grid;
-      grid-template-columns: repeat(4, 1fr);
+      grid-template-columns: repeat(3, 1fr);
       gap: 24px;
       margin-top: 48px;
     }
@@ -625,7 +762,6 @@
       display: flex;
       flex-direction: column;
       gap: 56px;
-      margin-top: 72px;
     }
     .merit-feature {
       display: grid;
@@ -782,9 +918,29 @@
        比較表
     ============================================ */
     .compare {
+      position: relative;
+      overflow: hidden;
       background: var(--color-surface);
       border-top: 1px solid var(--color-border);
       border-bottom: 1px solid var(--color-border);
+    }
+
+    .compare::after {
+      content: 'difference';
+      position: absolute;
+      top: -10px;
+      right: 0;
+      font-family: var(--font-display);
+      font-size: clamp(72px, 12vw, 132px);
+      font-weight: 600;
+      line-height: 1;
+      color: rgba(169,130,43,0.08);
+      pointer-events: none;
+    }
+
+    .compare .container {
+      position: relative;
+      z-index: 1;
     }
 
     .compare-table {
@@ -964,6 +1120,29 @@
     /* ============================================
        プラン
     ============================================ */
+    .plan-section {
+      position: relative;
+      overflow: hidden;
+    }
+
+    .plan-section::after {
+      content: 'plan';
+      position: absolute;
+      top: -10px;
+      right: 0;
+      font-family: var(--font-display);
+      font-size: clamp(72px, 12vw, 132px);
+      font-weight: 600;
+      line-height: 1;
+      color: rgba(169,130,43,0.08);
+      pointer-events: none;
+    }
+
+    .plan-section .container {
+      position: relative;
+      z-index: 1;
+    }
+
     .plans-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
@@ -1079,6 +1258,29 @@
     /* ============================================
        導入の流れ
     ============================================ */
+    .flow-section {
+      position: relative;
+      overflow: hidden;
+    }
+
+    .flow-section::after {
+      content: 'flow';
+      position: absolute;
+      top: -10px;
+      right: 0;
+      font-family: var(--font-display);
+      font-size: clamp(72px, 12vw, 132px);
+      font-weight: 600;
+      line-height: 1;
+      color: rgba(169,130,43,0.08);
+      pointer-events: none;
+    }
+
+    .flow-section .container {
+      position: relative;
+      z-index: 1;
+    }
+
     .steps-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
@@ -1135,9 +1337,29 @@
        セキュリティ
     ============================================ */
     .security {
+      position: relative;
+      overflow: hidden;
       background: var(--color-surface);
       border-top: 1px solid var(--color-border);
       border-bottom: 1px solid var(--color-border);
+    }
+
+    .security::after {
+      content: 'security';
+      position: absolute;
+      top: -10px;
+      right: 0;
+      font-family: var(--font-display);
+      font-size: clamp(72px, 12vw, 132px);
+      font-weight: 600;
+      line-height: 1;
+      color: rgba(169,130,43,0.08);
+      pointer-events: none;
+    }
+
+    .security .container {
+      position: relative;
+      z-index: 1;
     }
 
     .security-list {
@@ -1175,6 +1397,29 @@
     /* ============================================
        FAQ
     ============================================ */
+    .faq-section {
+      position: relative;
+      overflow: hidden;
+    }
+
+    .faq-section::after {
+      content: 'Q&A';
+      position: absolute;
+      top: -10px;
+      right: 0;
+      font-family: var(--font-display);
+      font-size: clamp(72px, 12vw, 132px);
+      font-weight: 600;
+      line-height: 1;
+      color: rgba(169,130,43,0.08);
+      pointer-events: none;
+    }
+
+    .faq-section .container {
+      position: relative;
+      z-index: 1;
+    }
+
     .faq-list {
       display: flex;
       flex-direction: column;
@@ -1497,8 +1742,6 @@
       .header-logo { font-size: 15px; }
       .header-cta { padding: 8px 16px; font-size: 12px; }
 
-      .solution-box { padding: 32px 24px; }
-
       .compare-table { font-size: 12px; }
       .compare-table th,
       .compare-table td { padding: 12px 14px; }
@@ -1559,7 +1802,7 @@
         </div>
       </div>
       <div class="hero-media">
-        <img src="images/hero-engineer.jpg" alt="エンジニアの作業風景">
+        <img src="images/hero.png" alt="ノートパソコンを持つ女性">
       </div>
     </div>
   </section>
@@ -1601,10 +1844,6 @@
         </div>
       </div>
 
-      <div class="pain-chevron fade-in" aria-hidden="true">
-        <svg viewBox="0 0 56 34"><polyline points="6,4 28,22 50,4"/><polyline points="6,16 28,34 50,16"/></svg>
-      </div>
-
       <!-- <div class="pain-image fade-in">
         <img src="images/Opportunity_loss.png" alt="SES企業 成長の限界：バックオフィスの罠。SES企業の成長を止める原因は、営業力ではなく『バックオフィスの限界』であることが少なくありません。本来の成長曲線に対し、事務作業による時間の損失で案件獲得数が350から100へ大幅に停滞する。">
       </div> -->
@@ -1612,41 +1851,66 @@
   </section>
 
   <!-- ============================================
-       サービス内容（導入文＋メリット＋フロー統合）
+       サービス紹介（〜とは）：課題→答えへの転換
   ============================================ -->
-  <section class="section">
-    <div class="container">
-      <!-- メリット概要カード（見出し＋画像のみ） -->
-      <div class="merit-cards fade-in">
-        <div class="pain-card">
-          <img src="images/merit1.png" alt="営業時間を取り戻せる">
-          <h3>解決策1：営業時間を取り戻せる</h3>
-        </div>
-        <div class="pain-card">
-          <img src="images/merit2.png" alt="管理部門を増やさなくてよい">
-          <h3>解決策2：管理部門を増やさなくてよい</h3>
-        </div>
-        <div class="pain-card">
-          <img src="images/merit3.png" alt="属人化を防げる">
-          <h3>解決策3：属人化を防げる</h3>
-        </div>
-        <div class="pain-card">
-          <img src="images/merit4.png" alt="SES業界に特化">
-          <h3>解決策4：SES業界に特化</h3>
-        </div>
-      </div>
+  <div class="chevron-down" aria-hidden="true">
+    <svg viewBox="0 0 48 40" fill="none" stroke="currentColor" stroke-width="5" stroke-linecap="round" stroke-linejoin="round">
+      <polyline points="6,6 24,20 42,6"/>
+      <polyline points="6,20 24,34 42,20"/>
+    </svg>
+  </div>
 
-      <div class="solution-box fade-in">
-        <p>
-          <span class="solution-lead gold">SES企業専門に特化したサービスです</span><br>
-          勤怠管理から請求・給与関連業務までを一括で支援し、管理部門を増やすことなく事業拡大をサポートします。
+  <section class="section about">
+    <div class="container">
+      <div class="fade-in">
+        <span class="section-label">その悩みを解決するサービス</span>
+        <h2 class="about-name">SES企業のための、月末バックオフィス代行<span class="about-brand">コアデスク（CoreDesk）</span></h2>
+        <p class="about-kind">
+          <strong>同じ「代行」でも、"営業代行"ではありません。ツールを渡すだけの"SaaS"とも違います。</strong><span class="kind-main">コアデスクが代わりに行うのは、</span><span class="kind-highlight"><span class="kh-inner">勤怠管理・請求書作成といった<strong>バックオフィス業務そのもの</strong>。</span></span>
+        </p>
+        <p class="about-desc">
+          SESに精通した専任チームがオンライン完結で、勤怠管理から請求・給与関連業務まで、SES特有の事務業務や請求業務をまるごと代行。管理部門を増やすことなく、社長や営業が売上をつくる仕事に集中できる環境をご提供します。
         </p>
       </div>
 
-      <!-- メリット詳細（左右交互レイアウト） -->
+      <div class="about-features fade-in">
+        <div class="about-feature">
+          <p class="af-lead">月額59,800円から</p>
+          <p>必要な業務だけを選んで柔軟に代行。管理担当を1人雇うより小さく始められます。</p>
+        </div>
+        <div class="about-feature">
+          <p class="af-lead">管理部門を増やさない</p>
+          <p>エンジニアが増えても、バックオフィス人員は増やさず対応。採用・育成の負担もかかりません。</p>
+        </div>
+        <div class="about-feature">
+          <p class="af-lead">SES業界に特化</p>
+          <p>精算幅や単価計算などSES特有の月末業務を熟知した専門チームが正確に処理します。</p>
+        </div>
+        <div class="about-feature">
+          <p class="af-lead">営業時間を取り戻せる</p>
+          <p>請求書作成・月末事務を任せることで、営業活動や採用活動に使える時間を確保できます。</p>
+        </div>
+        <div class="about-feature">
+          <p class="af-lead">増える管理工数を任せられる</p>
+          <p>エンジニア数が増えても月末業務を外部化し、管理部門を増やさない運営を支えます。</p>
+        </div>
+        <div class="about-feature">
+          <p class="af-lead">属人化を防げる</p>
+          <p>標準化された運営フローで、担当者の退職や変更があっても業務が止まりにくい体制をつくります。</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================
+       メリット（詳細）
+  ============================================ -->
+  <section class="section">
+    <div class="container">
+      <!-- 課題解決策詳細（左右交互レイアウト） -->
       <div class="merit-features fade-in">
         <div class="merit-feature">
-          <div class="mf-media"><img src="images/merit1.png" alt=""></div>
+          <div class="mf-media"><img src="images/merit1.png" alt="メリット1：営業時間を取り戻せる"></div>
           <div class="mf-body">
             <h3 class="mf-title">1：営業時間を取り戻せる</h3>
             <div class="mf-desc">
@@ -1658,7 +1922,7 @@
           </div>
         </div>
         <div class="merit-feature">
-          <div class="mf-media"><img src="images/merit2.png" alt=""></div>
+          <div class="mf-media"><img src="images/merit2.png" alt="メリット2：管理部門を増やさなくてよい"></div>
           <div class="mf-body">
             <h3 class="mf-title">2：管理部門を増やさなくてよい</h3>
             <div class="mf-desc">
@@ -1669,7 +1933,7 @@
           </div>
         </div>
         <div class="merit-feature">
-          <div class="mf-media"><img src="images/merit3.png" alt=""></div>
+          <div class="mf-media"><img src="images/merit3.png" alt="メリット3：属人化を防げる"></div>
           <div class="mf-body">
             <h3 class="mf-title">3：属人化を防げる</h3>
             <div class="mf-desc">
@@ -1679,7 +1943,7 @@
           </div>
         </div>
         <div class="merit-feature">
-          <div class="mf-media"><img src="images/merit4.png" alt=""></div>
+          <div class="mf-media"><img src="images/merit4.png" alt="メリット4：SES業界に特化"></div>
           <div class="mf-body">
             <h3 class="mf-title">4：SES業界に特化</h3>
             <div class="mf-desc">
@@ -1742,6 +2006,55 @@
        </div>
       </div>
       <span class="sweep-end" aria-hidden="true"></span>
+    </div>
+  </section>
+
+  <!-- ============================================
+       依頼できる業務内容
+  ============================================ -->
+  <section class="section tasks-section">
+    <div class="container">
+      <div class="fade-in">
+        <h2 class="section-title">依頼できる業務内容</h2>
+        <p class="section-desc">SES特有のバックオフィス業務を幅広くカバー。下記は主な業務例で、プランに応じて必要な範囲だけ依頼できます。</p>
+        <div class="divider"></div>
+      </div>
+
+      <div class="tasks-grid fade-in">
+        <div class="task-cat">
+          <div class="task-cat-head">勤怠・稼働管理</div>
+          <ul>
+            <li>勤怠回収・勤怠催促</li>
+            <li>勤怠チェック（記入漏れ・契約違反の確認）</li>
+            <li>稼働一覧の作成</li>
+          </ul>
+        </div>
+        <div class="task-cat">
+          <div class="task-cat-head">請求・契約</div>
+          <ul>
+            <li>請求書作成（SES精算幅・単価に対応）</li>
+            <li>請求書の送付代行</li>
+            <li>協力会社への支払一覧作成</li>
+            <li>契約書作成の支援</li>
+          </ul>
+        </div>
+        <div class="task-cat">
+          <div class="task-cat-head">給与・レポート</div>
+          <ul>
+            <li>給与計算用データの作成</li>
+            <li>粗利一覧の作成</li>
+            <li>月次管理資料の作成</li>
+            <li>月次経営レポート</li>
+          </ul>
+        </div>
+        <div class="task-cat">
+          <div class="task-cat-head">台帳・証明</div>
+          <ul>
+            <li>エンジニア台帳の管理</li>
+            <li>各種証明書の発行</li>
+          </ul>
+        </div>
+      </div>
     </div>
   </section>
 
@@ -1838,7 +2151,7 @@
   <!-- ============================================
        プラン
   ============================================ -->
-  <section class="section">
+  <section class="section plan-section">
     <div class="container">
       <div class="fade-in">
         <h2 class="section-title">プラン</h2>
@@ -1896,7 +2209,7 @@
   <!-- ============================================
        導入の流れ
   ============================================ -->
-  <section class="section" style="background:var(--color-surface);border-top:1px solid var(--color-border);border-bottom:1px solid var(--color-border);">
+  <section class="section flow-section" style="background:var(--color-surface);border-top:1px solid var(--color-border);border-bottom:1px solid var(--color-border);">
     <div class="container">
       <div class="fade-in">
         <h2 class="section-title">導入の流れ</h2>
@@ -1986,7 +2299,7 @@
   <!-- ============================================
        FAQ
   ============================================ -->
-  <section class="section">
+  <section class="section faq-section">
     <div class="container">
       <div class="fade-in">
         <h2 class="section-title">よくある質問</h2>
