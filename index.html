@@ -245,21 +245,27 @@
     }
 
     .hero-media {
-      position: relative;
-      /* 画像に焼き込まれた左右の余白ぶん、被写体をテキスト側へ寄せる */
-      margin-left: -6%;
+      position: absolute;
+      top: 50%;
+      right: -22vw;
+      width: min(65vw, 988px);
+      margin-left: 0;
+      transform: translateY(-50%);
+      pointer-events: none;
+      z-index: -1;
     }
 
     .hero-media img {
       width: 100%;
       height: auto;
-      max-width: 612px;   /* 元画像の幅。これ以上引き伸ばさない＝ボケ防止 */
+      max-width: none;
       margin: 0 auto;
       display: block;
     }
 
     .hero-text {
       min-width: 0;
+      max-width: 560px;
     }
 
     @media (max-width: 860px) {
@@ -268,7 +274,17 @@
       }
 
       .hero-media {
+        position: relative;
+        top: auto;
+        right: auto;
         order: -1;
+        width: 100%;
+        transform: none;
+        z-index: 0;
+      }
+
+      .hero-media img {
+        max-width: min(100%, 560px);
       }
     }
 
