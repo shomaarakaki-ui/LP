@@ -1764,13 +1764,6 @@
     .form-success h3 { font-size: 20px; margin-bottom: 12px; }
     .form-success p { font-size: 14px; color: var(--color-text-muted); line-height: 1.9; }
 
-    /* デモ動作の注記 */
-    .form-demo-note {
-      margin-top: 18px; padding: 10px 14px;
-      background: rgba(201,168,76,0.06); border: 1px dashed rgba(201,168,76,0.4);
-      border-radius: 2px; font-size: 12.5px; color: var(--color-gold); line-height: 1.65;
-    }
-
     @media (max-width: 860px) {
       .contact-grid { grid-template-columns: 1fr; gap: 40px; }
     }
@@ -2535,10 +2528,6 @@
             <p class="form-note">
               送信により<a href="https://neighborengineers.jp/privacy_policy/" target="_blank" rel="noopener">プライバシーポリシー</a>に同意したものとみなします。
             </p>
-
-            <div class="form-demo-note">
-              ※ 現在このフォームはデモ動作です。送信先（メール／API）は未定のため、実際には送信されません。連携先確定後に有効化します。
-            </div>
           </div>
 
           <!-- 送信完了表示 -->
@@ -2669,14 +2658,30 @@
         submitBtn.disabled = true;
         submitBtn.innerHTML = '<span class="spinner" aria-hidden="true"></span>送信中…';
 
-        // デモ：送信先未定のためフロントで完了画面に遷移
-        // （API連携先が決まり次第、ここを fetch(...) に差し替える。
-        //   失敗時は下記 catch 相当でボタンを復帰させ、summaryに再試行を促す）
-        setTimeout(() => {
-          form.style.display = 'none';
-          success.classList.add('show');
-          success.scrollIntoView({ behavior: 'smooth', block: 'center' });
-        }, 1000);
+        const payload = new URLSearchParams({
+          company: document.getElementById('f-company').value.trim(),
+          name: document.getElementById('f-name').value.trim(),
+          email: document.getElementById('f-email').value.trim(),
+          type: document.getElementById('f-type').value,
+          message: document.getElementById('f-message').value.trim()
+        });
+
+        fetch('https://script.google.com/macros/s/AKfycbwoIqAYErBEI4HGSqqv_J2eSILzaTz58ai1JT-JQ500j8RKaclxVws6GOkYAZCVWks8gg/exec', {
+          method: 'POST',
+          mode: 'no-cors',
+          body: payload
+        })
+          .then(() => {
+            form.style.display = 'none';
+            success.classList.add('show');
+            success.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          })
+          .catch(() => {
+            submitBtn.disabled = false;
+            submitBtn.innerHTML = '送信する';
+            summary.textContent = '時間をおいて再度お試しください。';
+            summary.classList.add('show');
+          });
       });
     })();
 
