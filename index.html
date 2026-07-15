@@ -259,7 +259,6 @@
         position: relative;
         bottom: auto;
         right: auto;
-        order: -1;
         width: 100%;
         z-index: 0;
       }
@@ -272,7 +271,10 @@
       }
 
       /* モバイルは自然改行を許容し、初画面にCTAまで収める */
-      .hero { padding-bottom: 24px; }
+      .hero {
+        align-items: flex-end;
+        padding-bottom: 0;
+      }
       .hero-title { margin-bottom: 16px; }
       .hero-sub { margin-bottom: 24px; }
     }
@@ -287,6 +289,18 @@
 
     /* PC：固定改行のみ（自動改行させない） */
     @media (min-width: 861px) {
+      /* フル画面時に画面の3/4を占め、次セクションの頭を覗かせる。人物写真は追従して頭切れを防ぐ */
+      .hero { min-height: 75vh; }
+      .hero-media {
+        width: auto;
+        height: calc(100% - var(--header-h));
+        /* テキスト列と重ならない範囲で画面サイズに追従して拡大 */
+        max-height: min(64vh, calc(47vw - 100px));
+      }
+      .hero-media img {
+        height: 100%;
+        width: auto;
+      }
       .hero-title .ht-line,
       .hero-sub .hs-line { white-space: nowrap; }
     }
@@ -568,6 +582,51 @@
       }
     }
 
+    /* 紹介セクションの人物画像：広い画面では見出し横の2カラム、狭い画面では本文下に縮小表示 */
+    .about-figure {
+      display: block;
+      height: auto;
+      pointer-events: none;
+    }
+    @media (min-width: 1101px) {
+      .about .container {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) 400px;
+        grid-template-areas:
+          "intro figure"
+          "features features";
+        column-gap: 56px;
+        row-gap: var(--about-stack-gap);
+        align-items: center;
+      }
+      .about .container > .fade-in:first-child {
+        grid-area: intro;
+        text-align: left;
+      }
+      .about-figure {
+        grid-area: figure;
+        width: 100%;
+        align-self: end;
+      }
+      .about-features { grid-area: features; }
+      .about-kind {
+        margin: 0;
+        max-width: none;
+        text-align: left;
+      }
+      .about-kind .kind-highlight { text-align: left; }
+      .about-name .about-brand { font-size: clamp(34px, 3.1vw, 44px); }
+    }
+    @media (max-width: 1100px) {
+      .about-figure {
+        width: min(58%, 300px);
+        margin: 0 auto;
+      }
+    }
+    @media (max-width: 720px) {
+      .about-figure { margin: 34px auto 0; }
+    }
+
     /* ============================================
        依頼できる業務内容
     ============================================ */
@@ -590,137 +649,193 @@
       margin-left: auto;
       margin-right: auto;
       max-width: none;
-      white-space: nowrap;
+      word-break: auto-phrase;
+      text-wrap: pretty;
     }
 
-    .tasks-section .about-cta,
-    .plan-section .about-cta {
-      margin-top: 56px;
-      max-width: 760px;
-      flex-direction: column;
-      align-items: center;
-      text-align: center;
-      gap: 18px;
-      padding: 32px 28px;
-      border-top: 0;
-      border: 1px solid var(--color-border);
-      background: var(--color-surface);
-      border-radius: 2px;
-    }
-    .tasks-section .about-cta { background: #FFFFFF; }
-    /* プラン下のCTAはボックス化せず、余白で見せる（同形ボックスの連続を回避） */
-    .plan-section .about-cta {
-      background: transparent;
-      border: none;
-      padding: 8px 0 0;
-      margin-top: 48px;
-    }
-    .tasks-section .about-cta .about-cta-reason,
-    .plan-section .about-cta .about-cta-reason {
-      font-size: 16px;
-      margin-bottom: 6px;
-    }
-    .tasks-section .about-cta .about-cta-text {
-      color: var(--color-text-muted);
-      font-weight: 500;
-    }
-    .tasks-section .about-cta .btn-group,
-    .plan-section .about-cta .btn-group {
-      display: flex;
-      justify-content: center;
-      flex-wrap: wrap;
+    /* フロー5枚を並べるため、このセクションだけ広めのコンテナにする */
+    @media (min-width: 1120px) {
+      .tasks-section .container { max-width: 1200px; }
     }
 
-    .tasks-grid {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 24px;
-      margin-top: 48px;
-    }
-    @media (max-width: 720px) { .tasks-grid { grid-template-columns: 1fr; } }
+    /* 月次フロー（セクションの主役ビジュアル・矢印帯） */
     .scope-flow-block {
-      margin-top: 40px;
+      margin-top: 48px;
     }
     .scope-flow {
       list-style: none;
       display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
       align-items: stretch;
-      gap: 8px 0;
     }
-    .scope-flow li {
+    .scope-step {
+      flex: 1;
+      min-width: 0;
+      display: flex;
+      flex-direction: column;
+    }
+    .scope-arrow {
+      margin: 0;
+      height: 78px;
       display: flex;
       align-items: center;
       justify-content: center;
       background: #EAE4D4;
       color: var(--color-text);
-      font-size: 14px;
+      font-size: 16px;
+      font-weight: 700;
+      line-height: 1.35;
+      text-align: center;
+      padding: 0 20px 0 30px;
+      clip-path: polygon(0 0, calc(100% - 18px) 0, 100% 50%, calc(100% - 18px) 100%, 0 100%, 18px 50%);
+    }
+    .scope-step + .scope-step .scope-arrow {
+      width: calc(100% + 12px);
+      margin-left: -12px;
+    }
+    .scope-detail {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      padding: 16px 22px 0 6px;
+    }
+    .step-desc {
+      flex: 1;
+      font-size: 12.5px;
+      line-height: 1.75;
+      color: var(--color-text-muted);
+      text-wrap: pretty;
+    }
+    .step-out {
+      margin-top: 14px;
+      padding-top: 12px;
+      border-top: 1px dashed var(--color-border);
+      font-size: 12.5px;
       font-weight: 600;
-      line-height: 1.4;
-      padding: 14px 24px 14px 30px;
-      margin-left: -8px;
-      clip-path: polygon(0 0, calc(100% - 14px) 0, 100% 50%, calc(100% - 14px) 100%, 0 100%, 14px 50%);
+      line-height: 1.6;
     }
-    .scope-flow li:first-child {
-      margin-left: 0;
-      padding-left: 22px;
-      clip-path: polygon(0 0, calc(100% - 14px) 0, 100% 50%, calc(100% - 14px) 100%, 0 100%);
+    .step-out-label {
+      display: inline-block;
+      font-size: 10.5px;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      color: var(--color-gold);
+      margin-right: 8px;
     }
-    @media (max-width: 720px) {
+    /* コンテナが960pxに狭まる幅以下では縦並び（矢印左＋詳細右）に切り替える */
+    @media (max-width: 1119px) {
       .scope-flow-block {
         margin-top: 36px;
       }
       .tasks-head .section-desc {
         max-width: 600px;
-        white-space: normal;
       }
-      .scope-flow {
-        flex-direction: column;
-        align-items: stretch;
-        gap: 6px;
+      .scope-flow { flex-direction: column; }
+      .scope-step {
+        display: grid;
+        grid-template-columns: 112px minmax(0, 1fr);
+        column-gap: 18px;
       }
-      .scope-flow li,
-      .scope-flow li:first-child {
+      .scope-arrow {
+        width: auto;
+        height: auto;
         margin-left: 0;
-        padding: 15px 18px 22px;
-        clip-path: polygon(0 0, 100% 0, 100% calc(100% - 12px), 50% 100%, 0 calc(100% - 12px));
+        align-self: stretch;
+        flex-direction: column;
+        font-size: 14px;
+        padding: 20px 10px 28px;
+        clip-path: polygon(0 0, 50% 14px, 100% 0, 100% calc(100% - 14px), 50% 100%, 0 calc(100% - 14px));
       }
+      .scope-step + .scope-step .scope-arrow {
+        width: auto;
+        margin-left: 0;
+        margin-top: -8px;
+      }
+      /* 「・」を単独行にして矢印内の名前を3行組みにする */
+      .step-dot { display: block; }
+      .scope-detail { padding: 14px 0 20px; }
+      /* 説明文の幅が広い縦並び時のみ文節単位で折り返す */
+      .step-desc { word-break: auto-phrase; }
     }
-    .task-cat {
-      background: #FFFFFF;
-      border: 1px solid var(--color-border);
-      border-top: 2px solid var(--color-gold);
-      border-radius: 2px;
-      padding: 26px 28px;
+
+    /* 対応業務の例（補足リスト） */
+    .tasks-ex {
+      max-width: 860px;
+      margin: 48px auto 0;
     }
-    .task-cat-head {
-      font-size: 16px;
+    .tasks-ex-title {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      font-size: 13px;
       font-weight: 700;
-      color: var(--color-gold);
-      letter-spacing: 0.02em;
-      padding-bottom: 14px;
-      margin-bottom: 14px;
-      border-bottom: 1px solid var(--color-border);
-    }
-    .task-cat ul {
-      list-style: none;
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-    }
-    .task-cat li {
-      font-size: 14px;
+      letter-spacing: 0.08em;
       color: var(--color-text-muted);
-      display: flex;
-      align-items: flex-start;
-      gap: 10px;
-      line-height: 1.7;
+      margin-bottom: 20px;
     }
-    .task-cat li::before {
-      content: '—';
+    .tasks-ex-title::before,
+    .tasks-ex-title::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: var(--color-border);
+    }
+    .tasks-ex-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 16px 48px;
+    }
+    .ex-cat-head {
+      font-size: 13px;
+      font-weight: 700;
+      margin-bottom: 2px;
+    }
+    .ex-cat-head::before {
+      content: '— ';
       color: var(--color-gold);
-      flex-shrink: 0;
+    }
+    .ex-cat-items {
+      font-size: 12.5px;
+      color: var(--color-text-muted);
+      line-height: 1.8;
+    }
+    .ex-item { display: inline-block; }
+    @media (max-width: 720px) {
+      .tasks-ex-grid { grid-template-columns: 1fr; }
+    }
+
+    /* セクションCTA（クロージングと同形式） */
+    .tasks-cta {
+      margin-top: 64px;
+      text-align: center;
+    }
+    .tasks-cta-title {
+      font-size: clamp(19px, 2.8vw, 26px);
+      font-weight: 700;
+      line-height: 1.6;
+      margin-bottom: 12px;
+      word-break: keep-all;
+      overflow-wrap: break-word;
+    }
+    .tasks-cta-title em {
+      font-style: normal;
+      color: var(--color-gold);
+    }
+    .tasks-cta-title .cl-line { white-space: nowrap; }
+    .tasks-cta-sub {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--color-text-muted);
+      line-height: 1.9;
+      margin-bottom: 28px;
+      word-break: auto-phrase;
+      text-wrap: pretty;
+    }
+    .tasks-cta .btn-group {
+      justify-content: center;
+    }
+    @media (max-width: 640px) {
+      .tasks-cta-title { word-break: normal; overflow-wrap: anywhere; }
+      .tasks-cta-title .cl-line { white-space: normal; }
     }
 
     /* メリット詳細（白地＋ナンバリング） */
@@ -1055,7 +1170,7 @@
       position: relative;
       overflow: hidden;
       background: var(--color-surface2);
-      padding: var(--section-py) 0;
+      padding: 64px 0;
     }
 
     .flow-section .container {
@@ -1076,8 +1191,7 @@
     .contact .container > .fade-in:first-child {
       text-align: center;
     }
-    .plan-section .container > .fade-in:first-child .section-desc,
-    .security .container > .fade-in:first-child .section-desc {
+    .plan-section .container > .fade-in:first-child .section-desc {
       margin-left: auto;
       margin-right: auto;
     }
@@ -1087,22 +1201,22 @@
     }
 
     .flow-lead {
-      display: grid;
-      gap: 8px;
       margin-top: 18px;
       color: var(--color-text);
-      font-size: clamp(15px, 1.8vw, 17px);
+      font-size: clamp(16px, 2vw, 19px);
       font-weight: 700;
       line-height: 1.75;
+      text-wrap: balance;
     }
 
     .flow-lead .gold {
       color: var(--color-gold);
+      white-space: nowrap;
     }
 
     .flow-map {
       position: relative;
-      margin-top: 42px;
+      margin-top: 28px;
     }
 
     /* 導入の流れ：番号・矢印・アイコンを廃し、連結した図形で一連の動きを示す */
@@ -1119,9 +1233,8 @@
       display: flex;
       flex-direction: column;
       justify-content: center;
-      gap: 7px;
       background: #FFFFFF;
-      padding: 22px 26px 22px 36px;
+      padding: 15px 26px 15px 36px;
       margin-left: -10px;
       text-align: center;
       clip-path: polygon(0 0, calc(100% - 16px) 0, 100% 50%, calc(100% - 16px) 100%, 0 100%, 16px 50%);
@@ -1137,37 +1250,40 @@
       color: var(--color-text);
       line-height: 1.4;
     }
-    .flow-steps .fs-desc {
-      font-size: 12px;
-      color: var(--color-text-muted);
-      line-height: 1.55;
-    }
+    /* モバイルは2列2行に畳み、矢羽根の向きは横のまま流れを保つ */
     @media (max-width: 720px) {
-      .flow-steps { flex-direction: column; gap: 6px; }
+      .flow-steps {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 5px 4px;
+      }
       .flow-steps li,
       .flow-steps li:first-child {
-        flex: none;
         margin-left: 0;
-        padding: 18px 20px 26px;
-        clip-path: polygon(0 0, 100% 0, 100% calc(100% - 14px), 50% 100%, 0 calc(100% - 14px));
+        padding: 12px 22px 12px 26px;
+        clip-path: polygon(0 0, calc(100% - 12px) 0, 100% 50%, calc(100% - 12px) 100%, 0 100%, 12px 50%);
+      }
+      .flow-steps li:nth-child(odd) {
+        padding-left: 22px;
+        clip-path: polygon(0 0, calc(100% - 12px) 0, 100% 50%, calc(100% - 12px) 100%, 0 100%);
+      }
+      .flow-steps .fs-title {
+        font-size: 13px;
       }
     }
 
     .flow-consult {
-      margin-top: 40px;
-      padding: 24px;
-      background: #FFFFFF;
-      border: 1px solid var(--color-border);
-      border-radius: 2px;
+      margin-top: 28px;
       text-align: center;
     }
 
     .flow-consult p {
-      margin-bottom: 14px;
+      margin-bottom: 18px;
       color: var(--color-text);
       font-size: 15px;
-      font-weight: 700;
+      font-weight: 500;
       line-height: 1.65;
+      text-wrap: balance;
     }
 
     .flow-consult .btn {
@@ -1177,20 +1293,19 @@
 
     @media (max-width: 640px) {
       .flow-section {
-        padding: 64px 0;
+        padding: 48px 0;
       }
 
       .flow-lead {
-        font-size: 15px;
+        font-size: 16px;
       }
 
       .flow-map {
-        margin-top: 44px;
+        margin-top: 22px;
       }
 
       .flow-consult {
-        margin-top: 36px;
-        padding: 24px 18px;
+        margin-top: 24px;
       }
 
       .flow-consult .btn {
@@ -1214,33 +1329,36 @@
       z-index: 1;
     }
 
+    /* アイコンを上・ラベルを下にした4列並び */
     .security-list {
       list-style: none;
       display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 0 56px;
-      margin-top: 32px;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 20px 16px;
+      max-width: 760px;
+      margin: 26px auto 0;
     }
 
     .security-list li {
       display: flex;
+      flex-direction: column;
       align-items: center;
-      gap: 16px;
-      padding: 20px 4px;
-      border-bottom: 1px solid var(--color-border);
+      gap: 12px;
+      text-align: center;
       font-size: 14.5px;
-      font-weight: 500;
+      font-weight: 600;
     }
-    .security-list li:nth-child(-n+2) { border-top: 1px solid var(--color-border); }
 
     @media (max-width: 720px) {
-      .security-list { grid-template-columns: 1fr; }
-      .security-list li:nth-child(2) { border-top: none; }
+      .security-list {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 24px 12px;
+      }
     }
 
     .security-icon {
-      width: 46px;
-      height: 46px;
+      width: 62px;
+      height: 62px;
       flex-shrink: 0;
       display: flex;
       align-items: center;
@@ -1252,8 +1370,8 @@
     }
     .security-icon img {
       display: block;
-      width: 22px;
-      height: 22px;
+      width: 28px;
+      height: 28px;
       object-fit: contain;
     }
 
@@ -1580,52 +1698,25 @@
         line-height: 1.7;
       }
 
-      .tasks-grid {
-        gap: 20px;
-        margin-top: 40px;
-      }
-
-      .task-cat {
-        padding: 22px 22px;
-      }
-
-      .task-cat-head {
-        font-size: 15px;
-        padding-bottom: 12px;
+      .flow-intro .section-title {
         margin-bottom: 12px;
       }
 
-      .task-cat ul {
-        gap: 8px;
-      }
-
-      .task-cat li {
-        gap: 10px;
-        font-size: 13.5px;
-        line-height: 1.6;
-      }
-
-      .flow-intro .section-title {
-        margin-bottom: 14px;
-      }
-
       .flow-lead {
-        margin-top: 14px;
-        gap: 6px;
+        margin-top: 12px;
         line-height: 1.65;
       }
 
       .flow-map {
-        margin-top: 32px;
+        margin-top: 24px;
       }
 
       .flow-consult {
-        margin-top: 30px;
-        padding: 20px 24px;
+        margin-top: 24px;
       }
 
       .flow-consult p {
-        margin-bottom: 12px;
+        margin-bottom: 16px;
         line-height: 1.55;
       }
 
@@ -1679,6 +1770,19 @@
 
       .btn-group { flex-direction: column; }
       .btn { width: 100%; text-align: center; }
+
+      .hero .btn-group {
+        flex-direction: row;
+        flex-wrap: wrap;
+        gap: 10px;
+      }
+      .hero .btn {
+        width: auto;
+        flex: 1 1 150px;
+        padding-left: 14px;
+        padding-right: 14px;
+        font-size: 14px;
+      }
     }
 
     /* ============================================
@@ -1782,6 +1886,7 @@
     </svg>
   </div>
 
+  <span id="service" class="anchor-target" aria-hidden="true"></span>
   <section class="section about">
     <div class="container">
       <div class="fade-in">
@@ -1806,6 +1911,7 @@
           <p>精算幅や単価計算など、SES特有の業務に対応します。</p>
         </div>
       </div>
+      <img class="about-figure fade-in" src="images/introduction.png" alt="" width="612" height="408" loading="lazy">
     </div>
   </section>
 
@@ -1815,59 +1921,75 @@
   <section class="section tasks-section">
     <div class="container">
       <div class="fade-in tasks-head">
-        <h2 class="section-title">依頼できる業務内容</h2>
+        <h2 class="section-title">勤怠回収から納品まで、<wbr>月末業務を<em>まるごと。</em></h2>
         <p class="section-desc">月末の回収から納品まで、SES特有のバックオフィス業務を必要な範囲だけ依頼できます。</p>
       </div>
 
       <div class="scope-flow-block fade-in">
         <ol class="scope-flow" aria-label="月次の基本フロー">
-          <li>勤怠回収・チェック</li>
-          <li>稼働一覧作成</li>
-          <li>請求書作成</li>
-          <li>給与・月次資料作成</li>
-          <li>納品</li>
+          <li class="scope-step">
+            <h3 class="scope-arrow">勤怠回収<span class="step-dot">・</span>チェック</h3>
+            <div class="scope-detail">
+              <p class="step-desc">客先常駐のエンジニア全員から月末の勤務実績を残さず回収し、記入漏れや計算ミス、過剰労働などの契約違反がないか精査します。</p>
+              <p class="step-out"><span class="step-out-label">成果物</span>チェック済み勤怠データ</p>
+            </div>
+          </li>
+          <li class="scope-step">
+            <h3 class="scope-arrow">稼働一覧作成</h3>
+            <div class="scope-detail">
+              <p class="step-desc">全エンジニアの正確な稼働時間を一本化し、請求や給与計算のベースとなる一覧表にまとめます。</p>
+              <p class="step-out"><span class="step-out-label">成果物</span>稼働一覧</p>
+            </div>
+          </li>
+          <li class="scope-step">
+            <h3 class="scope-arrow">請求書作成</h3>
+            <div class="scope-detail">
+              <p class="step-desc">SES特有の精算幅（上限・下限時間）や単価に基づき、クライアント向けの請求書を正確に発行します。</p>
+              <p class="step-out"><span class="step-out-label">成果物</span>請求書</p>
+            </div>
+          </li>
+          <li class="scope-step">
+            <h3 class="scope-arrow">給与<span class="step-dot">・</span>月次資料作成</h3>
+            <div class="scope-detail">
+              <p class="step-desc">基本給や残業代、控除額などを給与計算ソフトや社労士にそのまま渡せる形で用意。売上・粗利・稼働状況も月次資料にまとめます。</p>
+              <p class="step-out"><span class="step-out-label">成果物</span>給与データ・月次管理資料</p>
+            </div>
+          </li>
+          <li class="scope-step">
+            <h3 class="scope-arrow">納品</h3>
+            <div class="scope-detail">
+              <p class="step-desc">作成したすべての書類やデータを、不備のない完璧な状態で期日までにお渡しします。</p>
+              <p class="step-out"><span class="step-out-label">成果物</span>月次書類・データ一式</p>
+            </div>
+          </li>
         </ol>
       </div>
 
-      <div class="tasks-grid fade-in">
-        <div class="task-cat">
-          <div class="task-cat-head">勤怠・稼働管理</div>
-          <ul>
-            <li>勤怠回収・催促</li>
-            <li>記入漏れ・契約違反チェック</li>
-            <li>稼働一覧作成</li>
-          </ul>
-        </div>
-        <div class="task-cat">
-          <div class="task-cat-head">請求・契約</div>
-          <ul>
-            <li>精算幅・単価対応の請求書作成</li>
-            <li>請求書送付代行</li>
-            <li>支払一覧作成・契約書支援</li>
-          </ul>
-        </div>
-        <div class="task-cat">
-          <div class="task-cat-head">給与・レポート</div>
-          <ul>
-            <li>給与計算用データ作成</li>
-            <li>粗利一覧・月次管理資料作成</li>
-            <li>月次経営レポート</li>
-          </ul>
-        </div>
-        <div class="task-cat">
-          <div class="task-cat-head">台帳・証明</div>
-          <ul>
-            <li>エンジニア台帳管理</li>
-            <li>各種証明書発行</li>
-          </ul>
+      <div class="tasks-ex fade-in">
+        <p class="tasks-ex-title">対応業務の例</p>
+        <div class="tasks-ex-grid">
+          <div class="ex-cat">
+            <p class="ex-cat-head">勤怠・稼働管理</p>
+            <p class="ex-cat-items"><span class="ex-item">勤怠回収・催促</span>／<span class="ex-item">記入漏れ・契約違反チェック</span>／<span class="ex-item">稼働一覧作成 等</span></p>
+          </div>
+          <div class="ex-cat">
+            <p class="ex-cat-head">請求・契約</p>
+            <p class="ex-cat-items"><span class="ex-item">精算幅・単価対応の請求書作成</span>／<span class="ex-item">請求書送付代行</span>／<span class="ex-item">支払一覧作成・契約書支援 等</span></p>
+          </div>
+          <div class="ex-cat">
+            <p class="ex-cat-head">給与・月次資料</p>
+            <p class="ex-cat-items"><span class="ex-item">給与計算用データ作成</span>／<span class="ex-item">粗利一覧 等</span></p>
+          </div>
+          <div class="ex-cat">
+            <p class="ex-cat-head">台帳・証明</p>
+            <p class="ex-cat-items"><span class="ex-item">エンジニア台帳管理</span>／<span class="ex-item">各種証明書発行 等</span></p>
+          </div>
         </div>
       </div>
 
-      <div class="about-cta fade-in">
-        <div>
-          <p class="about-cta-reason">成長の壁は、営業力ではなく<em>バックオフィス</em>かもしれません。</p>
-          <p class="about-cta-text">「見積がほしい」「この業務が依頼できるか知りたい」など、お気軽にお問い合わせください。</p>
-        </div>
+      <div class="tasks-cta fade-in">
+        <p class="tasks-cta-title"><span class="cl-line">勤怠も請求も自社で抱える月末から、</span><br><em>受け取って確認するだけの月末へ。</em></p>
+        <p class="tasks-cta-sub">「見積がほしい」「この業務が依頼できるか知りたい」など、お気軽にお問い合わせください。</p>
         <div class="btn-group">
           <a href="#contact" class="btn btn-primary" data-intent="無料相談">無料で相談する</a>
           <a href="#download" class="btn btn-outline" data-intent="資料請求">資料ダウンロード</a>
@@ -1990,20 +2112,10 @@
             <li>請求書送付代行</li>
             <li>エンジニア台帳管理</li>
             <li>証明書発行</li>
-            <li>月次経営レポート</li>
           </ul>
         </div>
       </div>
 
-      <div class="about-cta fade-in">
-        <div>
-          <p class="about-cta-reason">自社に合うプランを確認できます。</p>
-        </div>
-        <div class="btn-group">
-          <a href="#contact" class="btn btn-primary" data-intent="無料相談">無料で相談する</a>
-          <a href="#download" class="btn btn-outline" data-intent="資料請求">資料ダウンロード</a>
-        </div>
-      </div>
     </div>
   </section>
 
@@ -2015,34 +2127,21 @@
       <div class="fade-in flow-intro">
         <h2 class="section-title">導入の流れ</h2>
         <div class="flow-lead">
-          <p>CoreDeskは、現在の運用を確認しながらスムーズに導入できます。</p>
-          <p><span class="gold">業務確認から導入準備まで</span>、段階ごとに確認しながら本番開始へ進めます。</p>
+          <p>今のExcel運用のまま、<span class="gold">最短2週間</span>で移行できます。</p>
         </div>
       </div>
 
       <div class="flow-map fade-in" aria-label="導入までのステップ">
         <ol class="flow-steps">
-          <li>
-            <span class="fs-title">お問い合わせ</span>
-            <span class="fs-desc">初回ミーティングを調整。</span>
-          </li>
-          <li>
-            <span class="fs-title">業務確認</span>
-            <span class="fs-desc">勤怠・請求フローを確認。</span>
-          </li>
-          <li>
-            <span class="fs-title">導入準備</span>
-            <span class="fs-desc">代行範囲・体制を準備。</span>
-          </li>
-          <li>
-            <span class="fs-title">本番開始</span>
-            <span class="fs-desc">手順を確認し本格運用へ。</span>
-          </li>
+          <li><span class="fs-title">お問い合わせ</span></li>
+          <li><span class="fs-title">業務確認</span></li>
+          <li><span class="fs-title">導入準備</span></li>
+          <li><span class="fs-title">本番開始</span></li>
         </ol>
       </div>
 
       <div class="flow-consult fade-in">
-        <p>「見積がほしい」「この業務が依頼できるか知りたい」など、お気軽にお問い合わせください。</p>
+        <p>月途中からの導入も可能。現在の勤怠・請求フローを確認したうえで、そのまま引き継ぎます。</p>
         <a href="#contact" class="btn btn-primary" data-intent="無料相談">無料で相談する</a>
       </div>
     </div>
@@ -2054,8 +2153,7 @@
   <section class="security section">
     <div class="container">
       <div class="fade-in">
-        <h2 class="section-title">セキュリティ</h2>
-        <p class="section-desc">お客様の大切な情報を適切に管理するため、以下の体制を整えています。</p>
+        <h2 class="section-title">セキュリティ体制</h2>
       </div>
 
       <ul class="security-list fade-in">
@@ -2063,25 +2161,25 @@
           <span class="security-icon" aria-hidden="true">
             <img src="images/フリーの握手アイコン.png" alt="">
           </span>
-          秘密保持契約（NDA）の締結
+          NDA締結
         </li>
         <li>
           <span class="security-icon" aria-hidden="true">
             <img src="images/盾の線画アイコン.png" alt="">
           </span>
-          業務担当者を限定した運営体制
+          担当者限定
         </li>
         <li>
           <span class="security-icon" aria-hidden="true">
             <img src="images/鍵アイコン15.png" alt="">
           </span>
-          アクセス権限の適切な管理
+          権限管理
         </li>
         <li>
           <span class="security-icon" aria-hidden="true">
             <img src="images/データベースアイコン1.png" alt="">
           </span>
-          お客様データの適切な保管・廃棄
+          データ管理
         </li>
       </ul>
     </div>
