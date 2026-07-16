@@ -10,7 +10,7 @@
   <meta property="og:image" content="images/ses_icon.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&family=Cormorant+Garamond:wght@400;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&family=Cormorant+Garamond:wght@400;600;700&family=Montserrat:wght@600&display=swap" rel="stylesheet">
   <style>
     /* ============================================
        デザイントークン
@@ -26,6 +26,8 @@
       --color-gold-light: #C9A84C;
       --color-dark:       #211D13;
       --color-dark-text:  #F2EDDF;
+      --color-brand-core: #5D3B1C;
+      --color-brand-desk: #E9AA0C;
 
       --font-display: 'Cormorant Garamond', serif;
       --font-body:    'Noto Sans JP', sans-serif;
@@ -101,6 +103,12 @@
     }
 
     .gold { color: var(--color-gold); }
+    /* 「採用・育成」など中黒を含む複合語の泣き別れ防止（keep-allは約物直後の折り返しを止められない） */
+    .nb { white-space: nowrap; }
+    .brand-core, .brand-desk { font-family: 'Montserrat', sans-serif; font-weight: 600; letter-spacing: normal; }
+    .brand-reading { white-space: nowrap; }
+    .brand-core { color: var(--color-brand-core); }
+    .brand-desk { color: var(--color-brand-desk); }
 
     .anchor-target {
       position: relative;
@@ -186,10 +194,9 @@
       font-size: 24px;
       font-weight: 700;
       letter-spacing: 0.02em;
-      color: var(--color-gold);
     }
     .header-logo img {
-      height: 32px;
+      height: 2.3em; /* font-size連動: 24px時≒55px */
       width: auto;
     }
 
@@ -211,44 +218,37 @@
       overflow: hidden;
     }
 
-    .hero::before {
-      content: '';
-      position: absolute;
-      top: 0; left: 0; right: 0; bottom: 0;
-      background:
-        radial-gradient(ellipse 60% 50% at 80% 50%, rgba(201,168,76,0.11) 0%, transparent 70%),
-        radial-gradient(ellipse 40% 60% at 10% 80%, rgba(201,168,76,0.06) 0%, transparent 60%);
-      pointer-events: none;
-    }
-
     .hero-inner {
       z-index: 1;
       display: grid;
       grid-template-columns: 1.2fr 0.8fr;
       gap: 24px;
       align-items: center;
+      /* ヒーローのみ通常コンテナ(960px)より広げ、見出しフォントが固定される1230pxまで画像を育てる */
+      max-width: 1230px;
+      /* 画像を左に詰めた分の空きが右側に偏るため、その半分だけ全体を右へ寄せて構図を中央に保つ */
+      transform: translateX(clamp(0px, calc((min(100vw, 1230px) * 0.6 - 603px) / 2), 68px));
     }
 
     .hero-media {
-      position: absolute;
-      bottom: 0;
-      right: 3vw;
-      width: min(38vw, 520px);
-      pointer-events: none;
-      z-index: -1;
+      width: 100%;
+      /* テキスト列の未使用幅(列幅-テキスト560px)の分だけ左へ寄せ、テキストとの間隔を常にgap相当に保つ。
+         1005px以下ではシフト量0になるためモバイル・狭いPC幅には影響しない */
+      transform: translateX(clamp(-135px, calc(603px - min(100vw, 1230px) * 0.6), 0px));
     }
 
     .hero-media img {
-      width: 100%;
+      display: block;
+      max-width: 100%;
       height: auto;
-      max-width: none;
-      margin: 0 auto;
     }
 
     .hero-text {
       min-width: 0;
       max-width: 560px;
     }
+
+    .hero-sub .pc-br { display: inline; }
 
     @media (max-width: 860px) {
       .hero-inner {
@@ -261,26 +261,29 @@
         right: auto;
         width: 100%;
         z-index: 0;
+        order: -1;
       }
 
       .hero-media img {
         max-width: min(100%, 460px);
-        max-height: 38vh;
+        max-height: 28vh;
         width: auto;
         margin: 0 auto;
+        display: block;
       }
 
-      /* モバイルは自然改行を許容し、初画面にCTAまで収める */
+      /* モバイルは画像を先頭に置き、初画面にCTAまで収める */
       .hero {
-        align-items: flex-end;
-        padding-bottom: 0;
+        align-items: center;
+        padding-bottom: 24px;
       }
       .hero-title { margin-bottom: 16px; }
       .hero-sub { margin-bottom: 24px; }
     }
 
     .hero-title {
-      font-size: clamp(32px, 3.75vw, 54px);
+      /* 1230pxで上限54pxに到達させ、以降サイズを変えない */
+      font-size: clamp(32px, 4.39vw, 54px);
       font-weight: 700;
       line-height: 1.4;
       margin-bottom: 24px;
@@ -289,20 +292,9 @@
 
     /* PC：固定改行のみ（自動改行させない） */
     @media (min-width: 861px) {
-      /* フル画面時に画面の3/4を占め、次セクションの頭を覗かせる。人物写真は追従して頭切れを防ぐ */
+      /* フル画面時に画面の3/4を占め、次セクションの頭を覗かせる */
       .hero { min-height: 75vh; }
-      .hero-media {
-        width: auto;
-        height: calc(100% - var(--header-h));
-        /* テキスト列と重ならない範囲で画面サイズに追従して拡大 */
-        max-height: min(64vh, calc(47vw - 100px));
-      }
-      .hero-media img {
-        height: 100%;
-        width: auto;
-      }
-      .hero-title .ht-line,
-      .hero-sub .hs-line { white-space: nowrap; }
+      .hero-title .ht-line { white-space: nowrap; }
     }
     @media (max-width: 860px) {
       .hero-title { font-size: clamp(30px, 7vw, 44px); }
@@ -467,7 +459,6 @@
       margin-top: 8px;
       font-family: var(--font-display);
       font-size: clamp(30px, 6.4vw, 60px);
-      color: var(--color-gold);
       letter-spacing: 0.02em;
       overflow-wrap: anywhere;
     }
@@ -497,8 +488,6 @@
       grid-template-columns: repeat(3, 1fr);
       gap: 24px;
       text-align: left;
-      word-break: auto-phrase;
-      text-wrap: pretty;
     }
     /* 特徴3点：カードではなく罫線区切りのカラムで見せる */
     .about-features .about-feature {
@@ -522,8 +511,10 @@
       color: var(--color-gold);
       margin-bottom: 0;
       line-height: 1.4;
-      word-break: auto-phrase;
       text-wrap: pretty;
+      /* 折り返しは<wbr>位置のみ許可する */
+      word-break: keep-all;
+      overflow-wrap: break-word;
     }
     .about-feature .af-lead::after {
       content: '';
@@ -541,8 +532,10 @@
       font-size: 13.5px;
       color: var(--color-text-muted);
       line-height: 1.75;
-      word-break: auto-phrase;
       text-wrap: pretty;
+      /* 折り返しは<wbr>位置のみ許可する */
+      word-break: keep-all;
+      overflow-wrap: break-word;
     }
     .about-cta {
       display: flex;
@@ -593,9 +586,12 @@
       display: block;
       height: auto;
       pointer-events: none;
+      width: min(58%, 300px);
+      margin: 0 auto;
     }
-    @media (min-width: 1101px) {
+    @media (min-width: 1163px) {
       .about .container {
+        max-width: 1200px;
         display: grid;
         grid-template-columns: minmax(0, 1fr) 360px;
         grid-template-areas:
@@ -622,13 +618,6 @@
         text-align: center;
       }
       .about-kind .kind-highlight { text-align: center; }
-      .about-name .about-brand { font-size: clamp(34px, 3.1vw, 44px); }
-    }
-    @media (max-width: 1100px) {
-      .about-figure {
-        width: min(58%, 300px);
-        margin: 0 auto;
-      }
     }
     @media (max-width: 720px) {
       .about-figure { margin: 34px auto 0; }
@@ -656,8 +645,10 @@
       margin-left: auto;
       margin-right: auto;
       max-width: none;
-      word-break: auto-phrase;
       text-wrap: pretty;
+      /* 折り返しは<wbr>位置のみ許可する */
+      word-break: keep-all;
+      overflow-wrap: break-word;
     }
 
     /* フロー5枚を並べるため、このセクションだけ広めのコンテナにする */
@@ -703,7 +694,9 @@
       flex: 1;
       display: flex;
       flex-direction: column;
-      padding: 16px 22px 0 6px;
+      /* 矢印ラベルの中央揃えに合わせて説明文も列中央に置く */
+      text-align: center;
+      padding: 16px 14px 0;
     }
     .step-desc {
       flex: 1;
@@ -711,6 +704,9 @@
       line-height: 1.75;
       color: var(--color-text-muted);
       text-wrap: pretty;
+      /* 折り返しは<wbr>位置のみ許可する */
+      word-break: keep-all;
+      overflow-wrap: break-word;
     }
     .step-out {
       margin-top: 14px;
@@ -729,7 +725,7 @@
       margin-right: 8px;
     }
     /* コンテナが960pxに狭まる幅以下では縦並び（矢印左＋詳細右）に切り替える */
-    @media (max-width: 1119px) {
+    @media (max-width: 1119.98px) {
       .scope-flow-block {
         margin-top: 36px;
       }
@@ -759,9 +755,7 @@
       }
       /* 「・」を単独行にして矢印内の名前を3行組みにする */
       .step-dot { display: block; }
-      .scope-detail { padding: 14px 0 20px; }
-      /* 説明文の幅が広い縦並び時のみ文節単位で折り返す */
-      .step-desc { word-break: auto-phrase; }
+      .scope-detail { text-align: left; padding: 14px 0 20px; }
     }
 
     /* 対応業務の例（補足リスト） */
@@ -834,8 +828,10 @@
       color: var(--color-text-muted);
       line-height: 1.9;
       margin-bottom: 28px;
-      word-break: auto-phrase;
       text-wrap: pretty;
+      /* 折り返しは<wbr>位置のみ許可する */
+      word-break: keep-all;
+      overflow-wrap: break-word;
     }
     .tasks-cta .btn-group {
       justify-content: center;
@@ -961,15 +957,15 @@
     .vs-th { padding: 15px 18px; }
     .vs-th-brand {
       background: var(--color-gold);
-      color: #FFFFFF;
       font-family: var(--font-display);
-      font-size: 18px;
+      font-size: 20px;
       letter-spacing: 0.08em;
       border: 2px solid var(--color-gold);
       border-bottom: none;
       margin-top: -16px; /* 表の上に一段はみ出させる */
       border-radius: 2px 2px 0 0;
     }
+    .vs-th-brand .brand-core { color: #FFFFFF; }
     .vs-th-gen {
       background: #E2DCCB;
       color: #6E6855;
@@ -1035,7 +1031,7 @@
       }
       .vs-cell { padding: 14px 10px; }
       .vs-th { padding: 10px 8px; }
-      .vs-th-brand { font-size: 14px; margin-top: -12px; }
+      .vs-th-brand { font-size: 16px; margin-top: -12px; }
       .vs-th-gen { font-size: 10.5px; letter-spacing: 0.02em; }
       .vs-axis {
         padding-left: 0;
@@ -1073,6 +1069,9 @@
       .plans-grid {
         grid-template-columns: 1fr;
       }
+      .plan-card.plan-saas {
+        grid-column: auto;
+      }
     }
 
     .plan-card {
@@ -1097,6 +1096,16 @@
     }
     @media (min-width: 901px){
       .plan-card.featured { transform: translateY(-12px); }
+      /* Officeプラン直下（右列）に配置 */
+      .plan-card.plan-saas { grid-column: 3; }
+    }
+
+    /* CTAボタン程度のタイトな余白にして、単独でも軽く収まる見た目にする */
+    .plan-card.plan-saas {
+      padding: 18px 30px;
+    }
+    .plan-card.plan-saas .plan-name {
+      margin-bottom: 0;
     }
 
     .plan-badge {
@@ -1122,24 +1131,11 @@
     .plan-name-lite   { color: #5F7683; }
     .plan-name-core   { color: #A9822B; }
     .plan-name-office { color: #C0742E; }
+    .plan-name-saas   { color: #4C7A6B; }
     /* 下位プラン全機能の注記カラー（含まれるプランの色と対応） */
     .plan-incl { font-weight: 700; }
     .plan-features li.plan-incl-lite { color: #5F7683; }
     .plan-features li.plan-incl-core { color: #A9822B; }
-
-    .plan-price {
-      font-size: 32px;
-      font-weight: 700;
-      margin-bottom: 4px;
-      white-space: nowrap;
-    }
-
-    .plan-price span {
-      font-size: 14px;
-      font-weight: 400;
-      color: var(--color-text-muted);
-      white-space: nowrap;
-    }
 
     .plan-divider {
       width: 100%;
@@ -1293,9 +1289,8 @@
       text-wrap: balance;
     }
 
-    .flow-consult .btn {
-      min-width: 260px;
-      padding: 13px 28px;
+    .flow-consult .btn-group {
+      justify-content: center;
     }
 
     @media (max-width: 640px) {
@@ -1313,11 +1308,6 @@
 
       .flow-consult {
         margin-top: 24px;
-      }
-
-      .flow-consult .btn {
-        min-width: 0;
-        width: 100%;
       }
     }
 
@@ -1751,12 +1741,12 @@
       left: 0; right: 0; bottom: 0;
       z-index: 90;
       transition: transform 0.3s ease, opacity 0.3s ease;
-      padding: 12px 16px calc(12px + env(safe-area-inset-bottom));
+      padding: 9px 16px calc(9px + env(safe-area-inset-bottom));
       background: rgba(255,255,255,0.96);
       backdrop-filter: blur(8px);
       border-top: 1px solid var(--color-border);
     }
-    .mobile-cta .btn { width: 100%; padding: 14px; }
+    .mobile-cta .btn { width: 100%; padding: 10px; font-size: 14px; line-height: 1.4; }
     .mobile-cta.is-hidden {
       transform: translateY(130%);
       opacity: 0;
@@ -1770,26 +1760,13 @@
       :root { --section-py: 64px; }
 
       .mobile-cta { display: block; }
-      body { padding-bottom: 72px; }
+      body { padding-bottom: 56px; }
       .header-cta { display: none; }
 
       .header-logo { font-size: 20px; }
 
       .btn-group { flex-direction: column; }
       .btn { width: 100%; text-align: center; }
-
-      .hero .btn-group {
-        flex-direction: row;
-        flex-wrap: wrap;
-        gap: 10px;
-      }
-      .hero .btn {
-        width: auto;
-        flex: 1 1 150px;
-        padding-left: 14px;
-        padding-right: 14px;
-        font-size: 14px;
-      }
     }
 
     /* ============================================
@@ -1818,7 +1795,7 @@
        ヘッダー
   ============================================ -->
   <header class="header">
-    <div class="header-logo"><img src="images/core_icon.png" alt="">CoreDesk</div>
+    <div class="header-logo"><img src="images/core_icon.png" alt=""><span class="brand-core">Core</span><span class="brand-desk">Desk</span></div>
     <a href="#contact" class="btn btn-primary header-cta" data-intent="無料相談">無料相談はこちら</a>
   </header>
 
@@ -1833,16 +1810,16 @@
           <em class="ht-line">SES事業を成長させる。</em>
         </h1>
         <p class="hero-sub">
-          <span class="hs-line">勤怠管理・請求書作成・給与計算用データ作成など、SES企業の業務をまるごと代行。</span><br class="pc-br">
-          <span class="hs-line">社長や営業担当者が「売上をつくる仕事」に集中できる環境を提供します。</span>
+          <span class="hs-line">勤怠管理・請求書作成・給与計算用データ作成など、<br>SES企業の業務をまるごと代行。</span><br class="pc-br">
+          <span class="hs-line">社長や営業担当者が「売上をつくる仕事」に<br>集中できる環境を提供します。</span>
         </p>
         <div class="btn-group">
           <a href="#contact" class="btn btn-primary" data-intent="無料相談">無料相談はこちら</a>
-          <a href="#download" class="btn btn-outline" data-intent="資料請求">サービス資料ダウンロード</a>
+          <a href="#download" class="btn btn-outline" data-intent="資料請求">まずは資料をダウンロード</a>
         </div>
       </div>
       <div class="hero-media">
-        <img src="images/hero.png" alt="ノートパソコンを持つ女性">
+        <img src="images/hero.jpg" alt="CoreDeskヒーロー画像">
       </div>
     </div>
   </section>
@@ -1898,7 +1875,7 @@
     <div class="container">
       <div class="fade-in">
         <p class="about-solution-label">\ その悩みを解決します /</p>
-        <h2 class="about-name">SES企業の<wbr>バックオフィス代行<span class="about-brand">CoreDesk(コアデスク)</span></h2>
+        <h2 class="about-name">SES企業の<wbr>バックオフィス代行<span class="about-brand"><span class="brand-core">Core</span><span class="brand-desk">Desk</span><span class="brand-core brand-reading">(コアデスク)</span></span></h2>
         <p class="about-kind">
           <strong>SESに精通した専任チームが、勤怠管理から請求・給与関連までオンラインで代行。</strong><span class="kind-highlight"><span class="kh-inner">社長や営業が売上づくりに集中できる環境を整えます。</span></span>
         </p>
@@ -1907,15 +1884,15 @@
       <div class="about-features fade-in">
         <div class="about-feature">
           <p class="af-lead">月額59,800円から</p>
-          <p>必要な業務だけを選択。管理担当を1人雇うより小さく始められます。</p>
+          <p>必要な業務だけを選択。<wbr>管理担当を1人雇うより<wbr>小さく始められます。</p>
         </div>
         <div class="about-feature">
           <p class="af-lead">管理部門を増やさない</p>
-          <p>人員を増やさず対応。採用・育成の負担も抑えられます。</p>
+          <p>人員を増やさず対応。<wbr><span class="nb">採用・育成</span>の負担も<wbr>抑えられます。</p>
         </div>
         <div class="about-feature">
           <p class="af-lead">SES業界に特化</p>
-          <p>精算幅や単価計算など、SES特有の業務に対応します。</p>
+          <p>精算幅や単価計算など、<wbr>SES特有の業務に<wbr>対応します。</p>
         </div>
       </div>
       <img class="about-figure fade-in" src="images/introduction.png" alt="" width="612" height="408" loading="lazy">
@@ -1929,7 +1906,7 @@
     <div class="container">
       <div class="fade-in tasks-head">
         <h2 class="section-title">勤怠回収から納品まで、<wbr>月末業務を<em>まるごと。</em></h2>
-        <p class="section-desc">月末の回収から納品まで、SES特有のバックオフィス業務を必要な範囲だけ依頼できます。</p>
+        <p class="section-desc">月末の回収から納品まで、<wbr>SES特有のバックオフィス業務を<wbr>必要な範囲だけ<wbr>依頼できます。</p>
       </div>
 
       <div class="scope-flow-block fade-in">
@@ -1937,35 +1914,35 @@
           <li class="scope-step">
             <h3 class="scope-arrow">勤怠回収<span class="step-dot">・</span>チェック</h3>
             <div class="scope-detail">
-              <p class="step-desc">客先常駐のエンジニア全員から月末の勤務実績を残さず回収し、記入漏れや計算ミス、過剰労働などの契約違反がないか精査します。</p>
+              <p class="step-desc">勤務実績の回収と<wbr>契約違反チェック。</p>
               <p class="step-out"><span class="step-out-label">成果物</span>チェック済み勤怠データ</p>
             </div>
           </li>
           <li class="scope-step">
             <h3 class="scope-arrow">稼働一覧作成</h3>
             <div class="scope-detail">
-              <p class="step-desc">全エンジニアの正確な稼働時間を一本化し、請求や給与計算のベースとなる一覧表にまとめます。</p>
+              <p class="step-desc">全員分の稼働時間を<wbr>ひとつの一覧に。</p>
               <p class="step-out"><span class="step-out-label">成果物</span>稼働一覧</p>
             </div>
           </li>
           <li class="scope-step">
             <h3 class="scope-arrow">請求書作成</h3>
             <div class="scope-detail">
-              <p class="step-desc">SES特有の精算幅（上限・下限時間）や単価に基づき、クライアント向けの請求書を正確に発行します。</p>
+              <p class="step-desc"><span class="nb">精算幅・単価</span>に沿った<wbr>請求書を発行。</p>
               <p class="step-out"><span class="step-out-label">成果物</span>請求書</p>
             </div>
           </li>
           <li class="scope-step">
             <h3 class="scope-arrow">給与<span class="step-dot">・</span>月次資料作成</h3>
             <div class="scope-detail">
-              <p class="step-desc">基本給や残業代、控除額などを給与計算ソフトや社労士にそのまま渡せる形で用意。売上・粗利・稼働状況も月次資料にまとめます。</p>
+              <p class="step-desc">給与データと<wbr>月次管理資料を作成。</p>
               <p class="step-out"><span class="step-out-label">成果物</span>給与データ・月次管理資料</p>
             </div>
           </li>
           <li class="scope-step">
             <h3 class="scope-arrow">納品</h3>
             <div class="scope-detail">
-              <p class="step-desc">作成したすべての書類やデータを、不備のない完璧な状態で期日までにお渡しします。</p>
+              <p class="step-desc"><span class="nb">書類・データ一式</span>を<wbr>期日までにお渡し。</p>
               <p class="step-out"><span class="step-out-label">成果物</span>月次書類・データ一式</p>
             </div>
           </li>
@@ -1995,11 +1972,11 @@
       </div>
 
       <div class="tasks-cta fade-in">
-        <p class="tasks-cta-title"><span class="cl-line">勤怠も請求も自社で抱える月末から、</span><br><em>受け取って確認するだけの月末へ。</em></p>
-        <p class="tasks-cta-sub">「見積がほしい」「この業務が依頼できるか知りたい」など、お気軽にお問い合わせください。</p>
+        <p class="tasks-cta-title"><span class="cl-line">勤怠も請求も自社で抱えず</span><br><em>確認するだけ</em></p>
+        <p class="tasks-cta-sub">「この業務が依頼できるか知りたい」など、<wbr>お気軽にお問い合わせください。</p>
         <div class="btn-group">
           <a href="#contact" class="btn btn-primary" data-intent="無料相談">無料で相談する</a>
-          <a href="#download" class="btn btn-outline" data-intent="資料請求">資料ダウンロード</a>
+          <a href="#download" class="btn btn-outline" data-intent="資料請求">まずは資料をダウンロード</a>
         </div>
       </div>
     </div>
@@ -2011,7 +1988,7 @@
   <section class="section merit-section">
     <div class="container">
       <div class="fade-in merit-head">
-        <h2 class="section-title">CoreDeskの特徴</h2>
+        <h2 class="section-title"><span class="brand-core">Core</span><span class="brand-desk">Desk</span>の特徴</h2>
       </div>
 
       <div class="merit-features fade-in">
@@ -2047,7 +2024,7 @@
 
       <div class="vs-table fade-in">
         <div class="vs-cell vs-th" aria-hidden="true"></div>
-        <div class="vs-cell vs-th vs-th-brand">CoreDesk</div>
+        <div class="vs-cell vs-th vs-th-brand"><span class="brand-core">Core</span><span class="brand-desk">Desk</span></div>
         <div class="vs-cell vs-th vs-th-gen">一般的な<wbr>事務代行</div>
 
         <div class="vs-cell vs-axis vs-rf">対象業種</div>
@@ -2076,14 +2053,13 @@
     <div class="container">
       <div class="fade-in">
         <h2 class="section-title">プラン</h2>
-        <p class="section-desc">最低契約期間は3か月。月途中からの導入も可能です。</p>
+        <p class="section-desc">月額59,800円（税込）から。月途中からの導入も可能です。</p>
       </div>
 
       <div class="plans-grid fade-in">
         <!-- Lite -->
         <div class="plan-card">
           <div class="plan-name plan-name-lite">Lite</div>
-          <div class="plan-price">¥59,800<span> ／月（税込）</span></div>
           <div class="plan-divider"></div>
           <ul class="plan-features">
             <li>勤怠管理</li>
@@ -2096,7 +2072,6 @@
         <div class="plan-card featured">
           <div class="plan-badge">おすすめ</div>
           <div class="plan-name plan-name-core">Core</div>
-          <div class="plan-price">¥198,000<span> ／月（税込）</span></div>
           <div class="plan-divider"></div>
           <ul class="plan-features">
             <li class="plan-incl plan-incl-lite">Liteプランの全機能</li>
@@ -2111,7 +2086,6 @@
         <!-- Office -->
         <div class="plan-card">
           <div class="plan-name plan-name-office">Office</div>
-          <div class="plan-price">¥348,000<span> ／月（税込）</span></div>
           <div class="plan-divider"></div>
           <ul class="plan-features">
             <li class="plan-incl plan-incl-core">Coreプランの全機能</li>
@@ -2119,6 +2093,16 @@
             <li>請求書送付代行</li>
             <li>エンジニア台帳管理</li>
             <li>証明書発行</li>
+          </ul>
+        </div>
+
+        <!-- SaaS導入プラン -->
+        <div class="plan-card plan-saas">
+          <div class="plan-name plan-name-saas">SaaS</div>
+          <div class="plan-divider"></div>
+          <ul class="plan-features">
+            <li class="plan-incl plan-incl-core">Coreプランの全機能</li>
+            <li>AIツールの設定・導入</li>
           </ul>
         </div>
       </div>
@@ -2149,7 +2133,10 @@
 
       <div class="flow-consult fade-in">
         <p>月途中からの導入も可能。現在の勤怠・請求フローを確認したうえで、そのまま引き継ぎます。</p>
-        <a href="#contact" class="btn btn-primary" data-intent="無料相談">無料で相談する</a>
+        <div class="btn-group">
+          <a href="#contact" class="btn btn-primary" data-intent="無料相談">無料で相談する</a>
+          <a href="#download" class="btn btn-outline" data-intent="資料請求">まずは資料をダウンロード</a>
+        </div>
       </div>
     </div>
   </section>
@@ -2238,15 +2225,6 @@
             <div class="faq-a-inner">ヒアリングを行い、可能な範囲で運用に合わせます。</div>
           </div>
         </div>
-        <div class="faq-item">
-          <div class="faq-q">
-            <span class="q-label">Q.</span>
-            <span class="q-text">契約期間はありますか？</span>
-          </div>
-          <div class="faq-a">
-            <div class="faq-a-inner">最低契約期間は3か月です。</div>
-          </div>
-        </div>
       </div>
     </div>
   </section>
@@ -2268,7 +2246,7 @@
         </p>
         <div class="btn-group">
           <a href="#contact" class="btn btn-primary">お問い合わせはこちら</a>
-          <a href="#download" class="btn btn-outline" data-intent="資料請求">サービス資料ダウンロード</a>
+          <a href="#download" class="btn btn-outline" data-intent="資料請求">まずは資料をダウンロード</a>
         </div>
       </div>
     </div>
@@ -2313,10 +2291,9 @@
               <label for="f-type">お問い合わせ種別<span class="req">必須</span></label>
               <select id="f-type" class="form-control" aria-describedby="err-f-type">
                 <option value="">選択してください</option>
-                <option value="無料相談">無料相談を申し込みたい</option>
-                <option value="資料請求">サービス資料がほしい</option>
-                <option value="見積もり">料金の見積もりがほしい</option>
-                <option value="その他">その他のお問い合わせ</option>
+                <option value="無料相談">無料相談</option>
+                <option value="資料請求">資料請求</option>
+                <option value="その他">その他問い合わせ</option>
               </select>
               <p class="form-error" id="err-f-type" role="alert" data-for="f-type">お問い合わせ種別をお選びください。</p>
             </div>
@@ -2508,16 +2485,18 @@
       faders.forEach(el => el.classList.add('visible'));
     }
 
-    // フォーム表示中はスマホ追従CTAを隠す（重なり・二重CTA回避）
+    // ヒーロー表示中は隠し、悩みセクションに入ったら表示。フォーム表示中は再び隠す（重なり・二重CTA回避）
     const contactSec = document.getElementById('contact');
+    const heroSec = document.querySelector('.hero');
     const mobileCta = document.querySelector('.mobile-cta');
     if (contactSec && mobileCta) {
       let ticking = false;
       const updateCta = () => {
-        const r = contactSec.getBoundingClientRect();
         const vh = window.innerHeight || document.documentElement.clientHeight;
-        const overlapping = r.top < vh && r.bottom > 0;
-        mobileCta.classList.toggle('is-hidden', overlapping);
+        const r = contactSec.getBoundingClientRect();
+        const overlappingContact = r.top < vh && r.bottom > 0;
+        const pastHero = heroSec ? heroSec.getBoundingClientRect().bottom <= 0 : true;
+        mobileCta.classList.toggle('is-hidden', !pastHero || overlappingContact);
         ticking = false;
       };
       const onScroll = () => {
