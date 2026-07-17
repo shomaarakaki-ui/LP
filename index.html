@@ -317,6 +317,8 @@
       margin-bottom: 40px;
       max-width: 600px;
       text-wrap: pretty;
+      word-break: keep-all;
+      overflow-wrap: break-word;
     }
 
     .hero .btn-primary {
@@ -1518,12 +1520,14 @@
     }
     .closing-title em { font-style: normal; color: var(--color-gold); }
     .closing-title .cl-line { white-space: nowrap; }
+    .closing-title .mob-br { display: none; }
     @media (max-width:640px){
       .pc-br{display:none;}
       .closing-title .cl-line{ white-space: normal; }
       /* スマホでは日本語を折り返せるようにして、はみ出しを防ぐ */
       .closing .container{ min-width: 0; }
       .closing-title, .closing-sub{ word-break: normal; overflow-wrap: anywhere; }
+      .closing-title .mob-br { display: inline; }
     }
 
     .closing-sub {
@@ -1854,7 +1858,7 @@
           <em class="ht-line">SES事業を成長させる。</em>
         </h1>
         <p class="hero-sub">
-          <span class="hs-line">勤怠管理・請求書作成・給与計算用データ作成など、<br>SES企業の業務をまるごと代行。</span><br class="pc-br">
+          <span class="hs-line">勤怠管理・<wbr>請求書作成・<wbr>給与計算用データ作成など、<wbr>SES企業の業務をまるごと代行。</span><br class="pc-br">
           <span class="hs-line">社長や営業担当者が「売上をつくる仕事」に<br>集中できる環境を提供します。</span>
         </p>
         <div class="btn-group">
@@ -1921,7 +1925,7 @@
         <p class="about-solution-label">\ その悩みを解決します /</p>
         <h2 class="about-name">SES企業の<wbr>バックオフィス代行<span class="about-brand"><span class="brand-core">Core</span><span class="brand-desk">Desk</span><span class="brand-core brand-reading">(コアデスク)</span></span></h2>
         <p class="about-kind">
-          <strong>SESに精通した専任チームが、勤怠管理から請求・給与関連までオンラインで代行。</strong><span class="kind-highlight"><span class="kh-inner">社長や営業が売上づくりに集中できる環境を整えます。</span></span>
+          <strong>SESに精通した専任チームが、勤怠管理から<span class="nb">請求</span>・<span class="nb">給与</span>関連までオンラインで代行。</strong><span class="kind-highlight"><span class="kh-inner">社長や営業が売上づくりに集中できる環境を整えます。</span></span>
         </p>
       </div>
 
@@ -2042,11 +2046,11 @@
         </div>
         <div class="about-feature">
           <p class="af-lead">標準化された運営体制</p>
-          <p>担当者の退職や変更があっても止まりにくい。</p>
+          <p>担当者の退職や変更があっても<wbr>止まりにくい。</p>
         </div>
         <div class="about-feature">
           <p class="af-lead">必要な範囲だけ依頼</p>
-          <p>管理部門を増やさず、月末業務だけを外部化。</p>
+          <p>管理部門を増やさず、<wbr>月末業務だけを外部化。</p>
         </div>
         <div class="about-feature">
           <p class="af-lead">オンラインで完結</p>
@@ -2063,7 +2067,7 @@
     <div class="container">
       <div class="fade-in vs-head">
         <h2 class="section-title">SESバックオフィスの<wbr>事務代行に<em>特化</em>。</h2>
-        <p class="section-desc">幅広い業種に対応する一般的な事務代行とは違い、CoreDeskはSES特有の業務だけを前提に設計しています。</p>
+        <p class="section-desc">幅広い業種に対応する一般的な<span class="nb">事務代行</span>とは違い、CoreDeskはSES特有の業務だけを前提に設計しています。</p>
       </div>
 
       <div class="vs-table fade-in">
@@ -2076,15 +2080,15 @@
         <div class="vs-cell vs-val vs-val-gen vs-rf">幅広い業種向け</div>
 
         <div class="vs-cell vs-axis vs-rt">対応業務</div>
-        <div class="vs-cell vs-val vs-val-brand vs-rt">SES特有の業務に<wbr>対応</div>
+        <div class="vs-cell vs-val vs-val-brand vs-rt">SES特有の<wbr>業務に対応</div>
         <div class="vs-cell vs-val vs-val-gen vs-rt">一般事務が中心</div>
 
         <div class="vs-cell vs-axis vs-rt">サポート範囲</div>
-        <div class="vs-cell vs-val vs-val-brand vs-rt">バックオフィス全体を<wbr>支援</div>
+        <div class="vs-cell vs-val vs-val-brand vs-rt">バックオフィス<wbr>全体を支援</div>
         <div class="vs-cell vs-val vs-val-gen vs-rt">業務単位での対応</div>
 
         <div class="vs-cell vs-axis vs-rt vs-axis-last">業界知識</div>
-        <div class="vs-cell vs-val vs-val-brand vs-rt vs-val-brand-last">SES運営を前提に<wbr>設計</div>
+        <div class="vs-cell vs-val vs-val-brand vs-rt vs-val-brand-last">SES運営を<wbr>前提に設計</div>
         <div class="vs-cell vs-val vs-val-gen vs-rt vs-val-gen-last">業務内容の<wbr>説明が必要</div>
       </div>
     </div>
@@ -2177,7 +2181,7 @@
       </div>
 
       <div class="flow-consult fade-in">
-        <p>月途中からの導入も可能。現在の勤怠・請求フローを確認したうえで、そのまま引き継ぎます。</p>
+        <p>月途中からの導入も可能。現在の勤怠・請求<span class="nb">フロー</span>を確認したうえで、そのまま引き継ぎます。</p>
         <div class="btn-group">
           <a href="#contact" class="btn btn-primary" data-intent="無料相談">無料で相談する</a>
           <a href="#download" class="btn btn-outline" data-intent="資料請求">まずは資料をダウンロード</a>
@@ -2240,16 +2244,16 @@
             <span class="q-text">何名規模から利用できますか？</span>
           </div>
           <div class="faq-a">
-            <div class="faq-a-inner">10名程度から100名程度までを想定しています。</div>
+            <div class="faq-a-inner">10名程度から100名程度まで<br>を想定しています。</div>
           </div>
         </div>
         <div class="faq-item">
           <div class="faq-q">
             <span class="q-label">Q.</span>
-            <span class="q-text">現在Excel管理ですが利用できますか？</span>
+            <span class="q-text">現在<span class="nb">Excel</span>管理ですが<wbr>利用できますか？</span>
           </div>
           <div class="faq-a">
-            <div class="faq-a-inner">はい。現在の運用フローを確認したうえで導入できます。</div>
+            <div class="faq-a-inner">はい。現在の運用フローを確認したうえで<br>導入できます。</div>
           </div>
         </div>
         <div class="faq-item">
@@ -2267,7 +2271,7 @@
             <span class="q-text">自社の運用に合わせてもらえますか？</span>
           </div>
           <div class="faq-a">
-            <div class="faq-a-inner">ヒアリングを行い、可能な範囲で運用に合わせます。</div>
+            <div class="faq-a-inner">ヒアリングを行い、可能な範囲で運用に<br>合わせます。</div>
           </div>
         </div>
       </div>
@@ -2281,8 +2285,8 @@
     <div class="container">
       <div class="closing-inner fade-in">
         <h2 class="closing-title">
-          <span class="cl-line">バックオフィスに追われる経営から、</span><br class="pc-br">
-          <em class="gold">事業成長に集中する経営へ。</em>
+          <span class="cl-line">バックオフィスに追われる経営<br class="mob-br">から、</span><br class="pc-br">
+          <em class="gold">事業成長に集中する<br class="mob-br">経営へ。</em>
         </h2>
         <p class="closing-sub">
           CoreDeskは、SES企業専門の管理部門として、<br>
