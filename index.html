@@ -344,8 +344,8 @@
 
     .pain-grid {
       display: grid;
-      grid-template-columns: 1fr;
-      gap: 20px;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
       margin: 40px 0 0;
     }
 
@@ -353,10 +353,11 @@
       background: #FFFFFF;
       border: 1px solid var(--color-border);
       border-radius: 2px;
-      padding: 24px 18px 22px;
+      padding: 20px 8px 18px;
       display: flex;
       flex-direction: column;
       align-items: center;
+      justify-content: center;
       text-align: center;
       transition: border-color 0.2s;
     }
@@ -383,10 +384,11 @@
       text-wrap: balance;
     }
 
-    /* 横1×縦6（〜479px） / 横2×縦3（480〜767px） /
+    /* 横2×縦3（〜767px、479px以下はカード幅が狭いためpadding/gapを詰める） /
        横3×縦2（768〜1199px） / 横6×縦1（1200px〜） */
     @media (min-width: 480px) {
-      .pain-grid { grid-template-columns: repeat(2, 1fr); }
+      .pain-grid { gap: 20px; }
+      .pain-card { padding: 24px 18px 22px; justify-content: flex-start; }
     }
     @media (min-width: 768px) {
       .pain-grid { grid-template-columns: repeat(3, 1fr); }
@@ -652,7 +654,7 @@
     }
 
     /* フロー5枚を並べるため、このセクションだけ広めのコンテナにする */
-    @media (min-width: 1120px) {
+    @media (min-width: 1166px) {
       .tasks-section .container { max-width: 1200px; }
     }
 
@@ -724,8 +726,8 @@
       color: var(--color-gold);
       margin-right: 8px;
     }
-    /* コンテナが960pxに狭まる幅以下では縦並び（矢印左＋詳細右）に切り替える */
-    @media (max-width: 1119.98px) {
+    /* 1165px以下は成果物行が折り返すため縦並び（矢印左＋詳細右）に切り替える */
+    @media (max-width: 1165.98px) {
       .scope-flow-block {
         margin-top: 36px;
       }
@@ -1852,11 +1854,11 @@
         </div>
         <div class="pain-card">
           <img src="images/assignment5.png" alt="エンジニアが増えるほど管理工数が増える">
-          <h3>エンジニアが<wbr>増えるほど<wbr>管理工数が<wbr>増える</h3>
+          <h3>エンジニアが<wbr>増えるほど<wbr>管理工数が増える</h3>
         </div>
         <div class="pain-card">
           <img src="images/assignment6.png" alt="管理部門を増やす余裕がない">
-          <h3>管理部門を<wbr>増やす余裕がない</h3>
+          <h3>管理部門を<wbr>増やす<wbr>余裕がない</h3>
         </div>
       </div>
     </div>
