@@ -275,6 +275,7 @@
       /* モバイルは画像を先頭に置き、初画面にCTAまで収める */
       .hero {
         align-items: center;
+        padding-top: calc(var(--header-h) + 16px);
         padding-bottom: 24px;
       }
       .hero-title { margin-bottom: 16px; }
@@ -407,6 +408,8 @@
       color: var(--color-gold);
       line-height: 0;
       margin: -32px 0 -12px;
+      /* fade-inのtransform頼みにせず、reduced-motion/JS無効でも.pain背景より前面に出す */
+      position: relative;
     }
     .chevron-down svg { width: clamp(72px, 10vw, 104px); height: auto; }
     .chevron-down svg polyline:last-child { opacity: 0.45; }
@@ -614,6 +617,12 @@
         justify-self: end;
       }
       .about-features { grid-area: features; }
+      /* カード3枚+画像の行はコンテナより100px右に出して配置する(fade-inのtransformと競合するためleftを使う) */
+      .about-features,
+      .about-figure {
+        position: relative;
+        left: 100px;
+      }
       .about-kind {
         margin: 0;
         max-width: none;
@@ -1062,17 +1071,27 @@
 
     .plans-grid {
       display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
+      grid-template-columns: repeat(4, minmax(0, 1fr));
       gap: 24px;
       margin-top: 40px;
       align-items: stretch;
     }
+    /* 4枚を一列に並べるため、このセクションだけ広めのコンテナにする */
+    @media (min-width: 1166px) {
+      .plan-section .container { max-width: 1200px; }
+    }
+    /* 中間幅ではカードが細くなるので余白を詰めて文字幅を確保する */
+    @media (min-width: 901px) and (max-width: 1165.98px) {
+      .plans-grid { gap: 16px; }
+      .plan-card { padding: 28px 18px; }
+    }
     @media (max-width: 900px) {
+      /* 縦積み時はカードが横に伸びすぎないよう幅を絞って中央配置にする */
       .plans-grid {
         grid-template-columns: 1fr;
-      }
-      .plan-card.plan-saas {
-        grid-column: auto;
+        max-width: 480px;
+        margin-left: auto;
+        margin-right: auto;
       }
     }
 
@@ -1098,16 +1117,15 @@
     }
     @media (min-width: 901px){
       .plan-card.featured { transform: translateY(-12px); }
-      /* Officeプラン直下（右列）に配置 */
-      .plan-card.plan-saas { grid-column: 3; }
     }
 
-    /* CTAボタン程度のタイトな余白にして、単独でも軽く収まる見た目にする */
+    /* ツール導入プランは種類の違うプランなので、このカードだけ配色を変える */
     .plan-card.plan-saas {
-      padding: 18px 30px;
+      background: #F4F7FB;
+      border-color: #A9BCD3;
     }
-    .plan-card.plan-saas .plan-name {
-      margin-bottom: 0;
+    .plan-card.plan-saas:hover {
+      border-color: #3F6398;
     }
 
     .plan-badge {
@@ -1128,12 +1146,22 @@
       color: var(--color-gold);
       margin-bottom: 8px;
       letter-spacing: 0.05em;
+      /* 和文プラン名(18px)と英字プラン名(22px)で行高を揃え、仕切り線の高さを合わせる */
+      line-height: 28px;
     }
     /* プランごとの名前カラー */
     .plan-name-lite   { color: #5F7683; }
     .plan-name-core   { color: #A9822B; }
     .plan-name-office { color: #C0742E; }
-    .plan-name-saas   { color: #4C7A6B; }
+    .plan-name-saas   { color: #3F6398; }
+    /* 和文プラン名は英字プラン名と視覚サイズを揃えるため一回り小さくする */
+    .plan-name-saas {
+      font-family: var(--font-body);
+      font-weight: 700;
+      font-size: 18px;
+      word-break: keep-all;
+      overflow-wrap: break-word;
+    }
     /* 下位プラン全機能の注記カラー（含まれるプランの色と対応） */
     .plan-incl { font-weight: 700; }
     .plan-features li.plan-incl-lite { color: #5F7683; }
@@ -1159,6 +1187,19 @@
       display: flex;
       align-items: flex-start;
       gap: 10px;
+      /* 折り返しは<wbr>位置のみ許可する */
+      word-break: keep-all;
+      overflow-wrap: break-word;
+    }
+
+    .plan-note {
+      margin-top: auto;
+      padding-top: 16px;
+      font-size: 12px;
+      line-height: 1.7;
+      color: var(--color-text-muted);
+      word-break: keep-all;
+      overflow-wrap: break-word;
     }
 
     .plan-features li::before {
@@ -1762,7 +1803,8 @@
       :root { --section-py: 64px; }
 
       .mobile-cta { display: block; }
-      body { padding-bottom: 56px; }
+      /* フッター表示中はCTAが必ず隠れるため逃げ不要。JS無効時(CTA常時表示)のみ残す */
+      html:not(.js) .footer { padding-bottom: 96px; }
       .header-cta { display: none; }
 
       .header-logo { font-size: 20px; }
@@ -2076,7 +2118,7 @@
           <div class="plan-name plan-name-core">Core</div>
           <div class="plan-divider"></div>
           <ul class="plan-features">
-            <li class="plan-incl plan-incl-lite">Liteプランの全機能</li>
+            <li class="plan-incl plan-incl-lite">Liteプランの<wbr>全機能</li>
             <li>請求書作成</li>
             <li>給与計算用データ</li>
             <li>粗利一覧</li>
@@ -2090,7 +2132,7 @@
           <div class="plan-name plan-name-office">Office</div>
           <div class="plan-divider"></div>
           <ul class="plan-features">
-            <li class="plan-incl plan-incl-core">Coreプランの全機能</li>
+            <li class="plan-incl plan-incl-core">Coreプランの<wbr>全機能</li>
             <li>契約書作成支援</li>
             <li>請求書送付代行</li>
             <li>エンジニア台帳管理</li>
@@ -2098,14 +2140,15 @@
           </ul>
         </div>
 
-        <!-- SaaS導入プラン -->
+        <!-- ツール導入プラン -->
         <div class="plan-card plan-saas">
-          <div class="plan-name plan-name-saas">SaaS</div>
+          <div class="plan-name plan-name-saas">ツール導入プラン</div>
           <div class="plan-divider"></div>
           <ul class="plan-features">
-            <li class="plan-incl plan-incl-core">Coreプランの全機能</li>
-            <li>AIツールの設定・導入</li>
+            <li class="plan-incl plan-incl-core">コアプランまでの<wbr>全機能</li>
+            <li><span>AIツールの<wbr><span class="nb">設定・導入</span></span></li>
           </ul>
+          <p class="plan-note">※ 導入後のツール運用は<wbr>お客様にて<wbr>ご担当いただきます</p>
         </div>
       </div>
 
